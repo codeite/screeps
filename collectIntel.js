@@ -34,10 +34,13 @@ module.exports = function collectIntel(spawn) {
         var structureLook = spawn.room.lookForAtArea('structure', pos.y-2, pos.x-5, pos.y+2, pos.x+2);
         intel.structures = cleanLook(structureLook);
         
-        if(intel.structures.length < 6){
-            intel.progressLevel = 2.1;
-        } else {
-            intel.progressLevel = 2.2
+        if(intel.controllerLevel < 4) {
+            
+            if(intel.structures.length < 6){
+                intel.progressLevel = 2.1;
+            } else {
+                intel.progressLevel = 2.2
+            }
         }
         
         if(intel.progressLevel > 2.1) {
@@ -51,6 +54,24 @@ module.exports = function collectIntel(spawn) {
         
         intel.reserves = intel.totalEnergy / intel.maxEnergy;
         
+        
+        if(intel.controllerLevel >= 4) {
+            spawn.storage = Game.getObjectById(Memory.idCache.storageId);
+            //console.log('Memory.idCache.storageId', Memory.idCache.storageId);
+            
+            if(!spawn.storage) {
+                var found = Game.flags.Storage.pos.lookFor('structure');
+                if(found.length) {
+                    var storageFound = _.filter(found, function (x) {return x.structureType == 'storage'});
+                    
+                    if(storageFound.length) {
+                        spawn.storage = storageFound[0];
+                        Memory.idCache.storageId = spawn.storage.id;
+                    }
+                }
+            }
+        }
+        
         //id327990
         //intel.energySources = spawn.room.find(FIND_SOURCES, {
         //    filter: function(object) { return object.id != 'id327990' }
@@ -58,7 +79,7 @@ module.exports = function collectIntel(spawn) {
         intel.farSources = _.filter(intel.energySources, function(x) {return x.id != intel.nearestEnergy.id; });
     }
     
-    if(!Memory.stats) Memory.stats = {};
+    
     Memory.stats.energy = "Energy "+intel.totalEnergy+" of "+intel.maxEnergy +" ("+(~~(intel.reserves*100))+"%)";
     
     //console.log('intel.structures.length:', intel.structures.length, ' progressLevel:', intel.progressLevel);

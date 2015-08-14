@@ -7,14 +7,35 @@ costs[WORK] = 100;
 module.exports = {
     basicWorker: {parts: [MOVE, CARRY, WORK], cost: 200},
     heavyWorker: {parts: [MOVE, CARRY, CARRY, WORK, WORK, WORK, WORK], cost: 550},
+    lightTransport: {parts: [MOVE, MOVE, CARRY, CARRY], cost: 300},
     heavyTransport: {parts: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], cost: 550},
 
     costOf: costOf,
     costOfCassis: costOfCassis,
-    largestWorker:largestWorker
+    largestWorker:largestWorker,
+    staticWorker: staticWorker
 }
 
- function largestWorker(energy) {
+function staticWorker(workerParts) {
+    if(Memory.memorization.staticWorker && Memory.memorization.staticWorker[workerParts]) {
+        return Memory.memorization.staticWorker[workerParts];
+    }
+    
+    var parts = [MOVE, CARRY];
+    for(var i=0; i<workerParts; i++){
+        parts.push(WORK);
+    }
+    
+     var cost = costOfCassis(parts);
+    var result = {parts: parts, cost: cost};
+    //console.log('working on largestWorker in',energy, 'out:',result.cost);
+    
+    if(!Memory.memorization.staticWorker) Memory.memorization.staticWorker = {};
+    Memory.memorization.staticWorker[workerParts] = result;
+    return result;
+}
+
+function largestWorker(energy) {
     if(Memory.memorization.largestWorker && Memory.memorization.largestWorker[energy]) {
         return Memory.memorization.largestWorker[energy];
     }

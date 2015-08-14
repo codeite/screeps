@@ -12,13 +12,21 @@ module.exports = function (creep) {
             return creep;
         } else if(bits[0] == 'S') {
             return Game.spawns[bits[1]];
+        } else if(bits[0] == 'I') {
+            var bid = Game.getObjectById[bits[1]];
+            //console.log('bid', bid, bits[1]);
+            return bid;
+        } else if(bits[0] == 'Z') {
+            var bid = Game.getObjectById[bits[1]];
+            //console.log('bid', bid, bits[1]);
+            return Game.spawns.Spawn1.storage;
         } else if(bits[0] == 'T') {
             return Game.structures[bits[1]];
         } else if(bits[0] == 'F') {
             var curTarget = Game.getObjectById(creep.memory.target);
             
             if(!curTarget) {
-                curTarget = creep.pos.findClosest(FIND_DROPPED_ENERGY);
+                curTarget = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
                 if(curTarget) creep.memory.target = curTarget.id;
             }
             
@@ -42,6 +50,7 @@ module.exports = function (creep) {
     var dindex = ~~creep.memory.dindex;
     
     var destination = getTarget(destinations[dindex], creep);
+    //console.log('destination', destination, destinations, dindex);
     
     //console.log(dindex, source, destination);
     
@@ -61,7 +70,18 @@ module.exports = function (creep) {
     if(creep.memory.mode === 'L') {
         creep.moveTo(source);
         if(source && source.transferEnergy) res = source.transferEnergy(creep);
-        if(source instanceof Energy) res = creep.pickup(source);
+        if(source instanceof Energy) {
+            res = creep.pickup(source);
+            //console.log('energy:', source.energy);
+            if(source.energy < 10) {
+                var curTarget = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY, {
+                    filter: function(object) {
+                        return object.id != source.id;
+                    }
+                });
+                if(curTarget) creep.memory.target = curTarget.id;
+            }
+        }
         
     } else if(creep.memory.mode === 'U') {
         if(destination) {
@@ -79,7 +99,10 @@ module.exports = function (creep) {
             } else {
                 res = 't';
             }
-        } else res = 'l';
+        } else {
+            res = 'l';
+            creep.say('No Tgt!');
+        }
 	}
 	
 	//console.log(creep.pos, destination.pos);

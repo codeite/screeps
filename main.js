@@ -13,6 +13,12 @@ var pumper = require('pumper');
 
 //require('spawnList');
 var stratergy = require('stratergy');
+
+if(!Memory.idCache) Memory.idCache = {};
+if(!Memory.stats) Memory.stats = {};
+if(!Memory.intel) Memory.intel = {};
+if(!Memory.memorization) Memory.memorization = {};
+
 stratergy();
 
 
