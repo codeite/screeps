@@ -5,16 +5,26 @@ module.exports = {
 }
 
 function buildMobile(creep) {
+    
     if(creep.carry.energy == 0) {
+        if(Memory.stratergy.preventBuild) return;
         var energySource = null;
         
-        if(Game.flags.BuildEnergy) {
+        if(creep.memory.config.useClosestEnergy) {
+            energySource = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: function(object) {
+                    return object.energy > 0;
+                }
+            });
+        }
+        
+        if(!energySource && Game.flags.BuildEnergy) {
             var structure = Game.flags.Flag1.pos.lookFor('structure');
             if(structure.length && structure[0].energy) {
                 energySource = structure;
             }
         }
-        
+
         if(!energySource) {
             energySource = Game.spawns.Spawn1;
         }

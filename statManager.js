@@ -1,5 +1,7 @@
 module.exports = function () {
     var stats = Memory.stats;
+    var intel = Memory.intel;
+    
     if(!stats.pumpedHistory) stats.pumpedHistory = [];
     
     stats.pumpedHistory.push(stats.pumped);
@@ -25,6 +27,6 @@ module.exports = function () {
         time = (~~(ticks/3600))+' hours';
     } 
     
-    
-    stats.pumpedStatus = "Pumed in last 10 tics "+average+'. Left: '+left+' Time left '+time;
+    stats.energy = "Energy "+intel.totalEnergy+" of "+intel.maxEnergy +" ("+(~~(intel.reserves*100))+"%)";
+    stats.pumpedStatus = "Pumped in last 10 tics "+average+'. Left: '+left+' Time left '+time;
 }

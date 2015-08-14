@@ -1,6 +1,7 @@
-var collectIntel = require('collectIntel');
 var chassis = require('chassis');
 var armyManager = require('armyManager');
+
+var stratergy4 = require('stratergy.4');
 
 function applyLevelOne(spawn, intel, army) {
     
@@ -89,75 +90,8 @@ function applyLevelTwo(spawn, intel, army) {
     }
 }
 
-function upgradeToLevelFour(spawn) {
-    //console.log('Upgrade');
-    spawn.room.createConstructionSite(spawn.pos.x, spawn.pos.y+1, STRUCTURE_ROAD);
-    spawn.room.createConstructionSite(spawn.pos.x, spawn.pos.y+2, STRUCTURE_ROAD);
-    spawn.room.createConstructionSite(spawn.pos.x, spawn.pos.y+3, STRUCTURE_ROAD);
-    for(var x=1; x<=5; x++) {
-        spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+2, STRUCTURE_EXTENSION);
-        spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+3, STRUCTURE_ROAD);
-        spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+4, STRUCTURE_EXTENSION);
-    }
-
-    Memory.stratergy.level = 4;
-}
-
-function applyLevelFour(spawn, intel, army) {
-
-    if(Memory.stratergy.level < 4) upgradeToLevelFour(spawn);
-    
-    var stats = {};
-    var workerId=1;
-    
-     var extensions = _.filter(intel.structures, function(x) { return x.structureType === STRUCTURE_EXTENSION;});
-        var ids = _.map(extensions, function(x){return x.id;});
-        ids = ids.join(';');
-        //console.log('ids', ids)
-        workerId++;//army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'park'});
-        workerId++;//army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'park'});
-        workerId++;//army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'park'});
-        army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'tanker3', config: { source: spawn.id, destination: ids} });
-        
-        
-    var heavyWorkerId = 1;
-    var lightTransport = 1;
-    var heavyTransportId = 1;
-    
-    if(!spawn.storage) {
-    
-        for(var i=0; i<2; i++) { 
-            army.push({chassis: chassis.staticWorker(6), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
-        }
-        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker2'});
-        heavyTransportId++;//army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'park'});
-        
-        for(var i=0; i<2; i++) {
-            var builderName = 'HeavyWorker'+(heavyWorkerId++);
-            army.push({chassis: chassis.heavyWorker, name: builderName, role: 'builder.static'});
-            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "F", destination: "R:"+builderName} });
-        }
-    } else {
-        for(var i=0; i<2; i++) { 
-            army.push({chassis: chassis.heavyWorker, name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
-        }
-        
-        army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
-        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "S:Spawn1"} });
-        
-        for(var i=0; i<1; i++) {
-            var pumperName = 'HeavyWorker'+(heavyWorkerId++);
-            army.push({chassis: chassis.largestWorker(Memory.intel.maxEnergy), name: pumperName, role: 'pumper.static'});
-            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Z", destination: "R:"+pumperName} }); 
-            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Z", destination: "R:"+pumperName} });
-        }
-    }
-
-}
-
-module.exports = function() {
+module.exports = function(intel) {
     var spawn = Game.spawns.Spawn1;
-    var intel = collectIntel(spawn);
     var army = [];
     if(!Memory.stratergy) {
         Memory.stratergy = {
@@ -179,9 +113,16 @@ module.exports = function() {
     } else if(intel.controllerLevel === 3) {
         applyLevelTwo(spawn, intel, army);
     } else {
-        applyLevelFour(spawn, intel, army);
+        stratergy4.applyLevelFour(spawn, intel, army);
     }
     
     armyManager.maintainArmy(spawn, army, intel);
+    
+    //console.log('Memory.stats.energyNeededForArmy', Memory.stats.energyNeededForArmy);
+    if(intel.reserves > 0.9 && Memory.stats.energyNeededForArmy <= 0) {
+        Memory.stratergy.preventBuild = false;
+    } else {
+        Memory.stratergy.preventBuild = true;
+    }
     
 }

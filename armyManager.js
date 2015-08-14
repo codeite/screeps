@@ -60,6 +60,5 @@ function maintainArmy(spawn, army, intel) {
     
     Memory.stats.energyNeededForArmy = energyNeeded;
     Memory.stats.army= 'Army size:'+ army.length+ " inService:"+inService+" missing:"+ (army.length - inService) + ' Energy needed: '+energyNeeded;
-    
     //console.log('army',_.map(army, function(x){return x.name;}));
 }

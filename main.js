@@ -5,13 +5,17 @@ var builder = require('builder');
 var tanker = require('tanker');
 var tanker2 = require('tanker2');
 var tanker3 = require('tanker3');
+var maintainer = require('maintainer');
 var tanker4 = require('tanker4');
 var drill = require('drill');
 var drill2 = require('drill2');
 var forklift = require('forklift');
 var pumper = require('pumper');
 
+var collectIntel = require('collectIntel');
+
 //require('spawnList');
+var intel = collectIntel(Game.spawns.Spawn1);
 var stratergy = require('stratergy');
 
 if(!Memory.idCache) Memory.idCache = {};
@@ -19,7 +23,7 @@ if(!Memory.stats) Memory.stats = {};
 if(!Memory.intel) Memory.intel = {};
 if(!Memory.memorization) Memory.memorization = {};
 
-stratergy();
+stratergy(intel);
 
 
 for(var name in Game.creeps) {
@@ -80,6 +84,8 @@ for(var name in Game.creeps) {
 	
 	if(creep.memory.role == 'roadBuilder') 	require('roadBuilder')(creep);
 	if(creep.memory.role == 'park') 	require('park')(creep);
+	
+	if(creep.memory.role == 'maintainer') 	require('maintainer')(creep, intel);
 }
 
 require('statManager')();

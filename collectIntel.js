@@ -31,8 +31,9 @@ module.exports = function collectIntel(spawn) {
             allStructures = spawn.room.memory.allStructures;
         }
         
-        var structureLook = spawn.room.lookForAtArea('structure', pos.y-2, pos.x-5, pos.y+2, pos.x+2);
+        var structureLook = spawn.room.lookForAtArea('structure', pos.y-2, pos.x-5, pos.y+4, pos.x+2);
         intel.structures = cleanLook(structureLook);
+        intel.extensions = _.map(_.filter(intel.structures, function(x) { return x.structureType === STRUCTURE_EXTENSION;}), function(y){return {id:y.id, e: y.energyCapacity - y.energy};});
         
         if(intel.controllerLevel < 4) {
             
@@ -78,9 +79,6 @@ module.exports = function collectIntel(spawn) {
         //});
         intel.farSources = _.filter(intel.energySources, function(x) {return x.id != intel.nearestEnergy.id; });
     }
-    
-    
-    Memory.stats.energy = "Energy "+intel.totalEnergy+" of "+intel.maxEnergy +" ("+(~~(intel.reserves*100))+"%)";
     
     //console.log('intel.structures.length:', intel.structures.length, ' progressLevel:', intel.progressLevel);
     Memory.intel = intel;
