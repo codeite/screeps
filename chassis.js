@@ -6,6 +6,7 @@ costs[WORK] = 100;
 
 module.exports = {
     basicWorker: {parts: [MOVE, CARRY, WORK], cost: 200},
+    agileWorker: {parts: [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, WORK, WORK], cost: 500},
     heavyWorker: {parts: [MOVE, CARRY, CARRY, WORK, WORK, WORK, WORK], cost: 550},
     lightTransport: {parts: [MOVE, MOVE, CARRY, CARRY], cost: 300},
     heavyTransport: {parts: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], cost: 550},
@@ -37,11 +38,16 @@ function transporter(carryParts) {
 }
 
 function staticWorker(workerParts, haveCarry) {
-    if(Memory.memorization.staticWorker && Memory.memorization.staticWorker[workerParts]) {
-        return Memory.memorization.staticWorker[workerParts];
+    var id = workerParts + ':' + haveCarry;
+    if(Memory.memorization.staticWorker && Memory.memorization.staticWorker[id]) {
+        return Memory.memorization.staticWorker[id];
     }
     
     var parts = [MOVE];
+    
+    for(var i=0; i<workerParts/7; i++){
+        parts.push(MOVE);
+    }
     
     if(haveCarry) {
         parts.push(CARRY);
@@ -56,7 +62,7 @@ function staticWorker(workerParts, haveCarry) {
     //console.log('working on largestWorker in',energy, 'out:',result.cost);
     
     if(!Memory.memorization.staticWorker) Memory.memorization.staticWorker = {};
-    Memory.memorization.staticWorker[workerParts] = result;
+    Memory.memorization.staticWorker[id] = result;
     return result;
 }
 

@@ -13,7 +13,8 @@ function buildMobile(creep) {
         if(creep.memory.config.useClosestEnergy) {
             energySource = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: function(object) {
-                    return object.energy > 0;
+                    //console.log('looking for closest', object, object.energy, object.store && object.store.energy);
+                    return object.energy > 0 || object.store && object.store.energy > 0;
                 }
             });
         }

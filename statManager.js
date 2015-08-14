@@ -5,12 +5,12 @@ module.exports = function () {
     if(!stats.pumpedHistory) stats.pumpedHistory = [];
     
     stats.pumpedHistory.push(stats.pumped);
-    while(stats.pumpedHistory.length > 10) {
+    while(stats.pumpedHistory.length > 3600) {
         stats.pumpedHistory.shift();
     }
     
     var totalPumped = _.sum(stats.pumpedHistory);
-    var average = totalPumped/stats.pumpedHistory.length;
+    var average = (totalPumped/stats.pumpedHistory.length).toFixed(2);
     
     var ctrl = Game.spawns.Spawn1.room.controller;
     var left = ctrl.progressTotal - ctrl.progress;
@@ -28,5 +28,5 @@ module.exports = function () {
     } 
     
     stats.energy = "Energy "+intel.totalEnergy+" of "+intel.maxEnergy +" ("+(~~(intel.reserves*100))+"%)";
-    stats.pumpedStatus = "Pumped in last 10 tics "+average+'. Left: '+left+' Time left '+time;
+    stats.pumpedStatus = "Pumped "+totalPumped+" in last "+(Math.floor(stats.pumpedHistory.length/60))+" minutes "+average+'. Left: '+left+' Time left '+time;
 }

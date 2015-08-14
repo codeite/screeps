@@ -32,6 +32,7 @@ function applyLevelFour(spawn, intel, army) {
     var heavyWorkerId = 1;
     var lightTransport = 1;
     var heavyTransportId = 1;
+    var pumperId = 1;
     
     if(!spawn.storage) {
     
@@ -55,13 +56,14 @@ function applyLevelFour(spawn, intel, army) {
         army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "S:Spawn1"} });
         
         for(var i=0; i<1; i++) {
-            var pumperName = 'HeavyWorker'+(heavyWorkerId++);
-            army.push({chassis: chassis.largestWorker(Memory.intel.maxEnergy), name: pumperName, role: 'pumper.static'});
+            var pumperName = 'Pumper'+(pumperId++);
+            army.push({chassis: chassis.staticWorker(8, true), name: pumperName, role: 'pumper.static'});
             army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Z", destination: "R:"+pumperName} }); 
             army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Z", destination: "R:"+pumperName} });
+            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Z", destination: "R:"+pumperName} });
         }
-        army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'builder', config: {industry: 'construction', useClosestEnergy: true}});
-        army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'builder', config: {industry: 'construction', useClosestEnergy: true}});
+        army.push({chassis: chassis.agileWorker, name: 'Builder1', role: 'builder', config: {industry: 'construction', useClosestEnergy: true}});
+        army.push({chassis: chassis.agileWorker, name: 'Builder2', role: 'builder', config: {industry: 'construction', useClosestEnergy: true}});
     }
 
 }
