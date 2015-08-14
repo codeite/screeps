@@ -8,7 +8,11 @@ module.exports = {
         
 	    if(creep.pos.isNearTo(creep.room.controller)) {
 	        if(creep.carry.energy > 0 && Memory.stratergy.pump) {
-    	        creep.upgradeController(creep.room.controller);
+	            
+    	        var res = creep.upgradeController(creep.room.controller);
+    	        if(res === OK){
+    	            Memory.stats.pumped += workRate(creep);
+    	        }
 	        }
 	    } else {
 		    creep.moveTo(creep.room.controller);
@@ -25,11 +29,22 @@ module.exports = {
     	} else {
     	    if(creep.pos.isNearTo(creep.room.controller)) {
     	        if(Memory.stratergy.pump){
-    	            creep.upgradeController(creep.room.controller);
+    	            var res = creep.upgradeController(creep.room.controller);
+        	        if(res === OK){
+        	            Memory.stats.pumped += workRate(creep);
+        	        }
     	        }
     	    } else {
     		    creep.moveTo(creep.room.controller);
     	    }
     	}
     }
+}
+
+function workRate(creep) {
+    var energy = creep.carry.energy;
+    var workParts = _.filter(creep.body, function(b){return b.type === WORK}).length;
+    var min = Math.min(energy, workParts);
+    //console.log('a', energy, workParts, min);
+    return min;
 }

@@ -1,4 +1,4 @@
-
+require('registry');
 
 var harvester = require('harvester');
 var builder = require('builder');
@@ -55,10 +55,10 @@ for(var name in Game.creeps) {
 	if(creep.memory.role == 'drill2') {
 		drill2(creep);
 	}
-
-	if(creep.memory.role == 'builder') {
-		builder(creep);
-	}
+	
+	if(creep.memory.role == 'builder') builder.buildMobile(creep);
+	if(creep.memory.role == 'builder.static') builder.buildStatic(creep);
+	
 	
 	if(creep.memory.role == 'forklift') {
 		forklift(creep);
@@ -71,4 +71,9 @@ for(var name in Game.creeps) {
 	if(creep.memory.role == 'pumper.mobile') {
 		pumper.mobile(creep);
 	}
+	
+	if(creep.memory.role == 'roadBuilder') 	require('roadBuilder')(creep);
+	if(creep.memory.role == 'park') 	require('park')(creep);
 }
+
+require('statManager')();
