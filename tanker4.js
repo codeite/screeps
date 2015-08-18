@@ -1,38 +1,10 @@
+
 module.exports = function (creep) {
     //creep.say('E'+creep.carry.energy);
     var res = 0;
     
     
-    function getTarget(descriptor, creep) {
-        var bits = descriptor.split(':');
-        if(bits[0] == 'C') {
-            return Game.creeps[bits[1]];
-        } else if(bits[0] == 'R') {
-            var creep = Game.registry.getCreep(bits[1]);
-            return creep;
-        } else if(bits[0] == 'S') {
-            return Game.spawns[bits[1]];
-        } else if(bits[0] == 'I') {
-            var bid = Game.getObjectById[bits[1]];
-            //console.log('bid', bid, bits[1]);
-            return bid;
-        } else if(bits[0] == 'Z') {
-            var bid = Game.getObjectById[bits[1]];
-            //console.log('bid', bid, bits[1]);
-            return Game.spawns.Spawn1.storage;
-        } else if(bits[0] == 'T') {
-            return Game.structures[bits[1]];
-        } else if(bits[0] == 'F') {
-            var curTarget = Game.getObjectById(creep.memory.target);
-            
-            if(!curTarget) {
-                curTarget = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
-                if(curTarget) creep.memory.target = curTarget.id;
-            }
-            
-            return curTarget;
-        }
-    }
+    
     
     var config = creep.memory.config || {};
     
@@ -45,14 +17,18 @@ module.exports = function (creep) {
     }
     
     
-    var source = getTarget(config.source, creep);
+    var source = creep.getTarget(config.source, creep);
     var destinations = config.destination.split(';');
     var dindex = ~~creep.memory.dindex;
     
-    var destination = getTarget(destinations[dindex], creep);
+    var destination = creep.getTarget(destinations[dindex], creep);
     //console.log('destination', destination, destinations, dindex);
     
     //console.log(dindex, source, destination);
+    if(creep.ticksToLive < 100 && creep.carry.energy == 0) {
+        creep.suicide();
+        return;
+    }
     
     if(!creep.memory.mode) {
         creep.memory.mode = 'L';
@@ -83,9 +59,16 @@ module.exports = function (creep) {
             }
         }
         
-    } else if(creep.memory.mode === 'U') {
+        if(creep.carry.energy === creep.carryCapacity) {
+            creep.memory.mode = 'U';
+            //creep.memory.dindex = (dindex+1)%destinations.length;
+        }
+        
+    }
+    
+    if(creep.memory.mode === 'U') {
         if(destination) {
-            creep.moveTo(destination.pos);
+           
             if(creep.pos.isNearTo(destination)) {
                 
                 res = creep.transferEnergy(destination);
@@ -97,6 +80,7 @@ module.exports = function (creep) {
                     //console.log('creep.memory.dindex2', creep.memory.dindex);
                 }
             } else {
+                creep.moveTo(destination.pos);
                 res = 't';
             }
         } else {

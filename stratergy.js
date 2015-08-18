@@ -2,6 +2,9 @@ var chassis = require('chassis');
 var armyManager = require('armyManager');
 
 var stratergy4 = require('stratergy.4');
+var stratergy5 = require('stratergy.5');
+var applyInvasion = require('stratergy.invasion');
+var stratergyMaintanance = require('stratergy.maintanance');
 
 function applyLevelOne(spawn, intel, army) {
     
@@ -49,7 +52,9 @@ function applyLevelTwo(spawn, intel, army) {
         //console.log('ids', ids)
         //army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'harvester'});
         //army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'harvester'});
-        army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'tanker3', config: { source: spawn.id, destination: ids} });
+        //army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'tanker3', config: { source: spawn.id, destination: ids} );
+        army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
+        //** Does maintainer work here in place of tanker3?
         
         /*
         army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'harvester'});
@@ -112,11 +117,17 @@ module.exports = function(intel) {
         applyLevelTwo(spawn, intel, army);
     } else if(intel.controllerLevel === 3) {
         applyLevelTwo(spawn, intel, army);
-    } else {
+    } else if(intel.controllerLevel === 4) {
         stratergy4.applyLevelFour(spawn, intel, army);
+    } else {
+        stratergy5.applyLevelFive(spawn, intel, army);
     }
     
+    applyInvasion.applyInvasion(spawn, intel, army);
+    
     armyManager.maintainArmy(spawn, army, intel);
+    
+    stratergyMaintanance.tick(spawn);
     
     //console.log('Memory.stats.energyNeededForArmy', Memory.stats.energyNeededForArmy);
     if(intel.reserves > 0.9 && Memory.stats.energyNeededForArmy <= 0) {

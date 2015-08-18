@@ -1,4 +1,11 @@
 require('registry');
+require('betterCreep');
+require('locators');
+
+require('conveyor');
+require('role.flagPlanter');
+require('role.melee');
+
 
 var harvester = require('harvester');
 var builder = require('builder');
@@ -11,6 +18,7 @@ var drill = require('drill');
 var drill2 = require('drill2');
 var forklift = require('forklift');
 var pumper = require('pumper');
+var explorer = require('explorer');
 
 var collectIntel = require('collectIntel');
 
@@ -20,15 +28,43 @@ var stratergy = require('stratergy');
 
 if(!Memory.idCache) Memory.idCache = {};
 if(!Memory.stats) Memory.stats = {};
+if(!Memory.stats.pumperTravelTime) Memory.stats.pumperTravelTime = [];
 if(!Memory.intel) Memory.intel = {};
 if(!Memory.memorization) Memory.memorization = {};
+if(!Memory.repairJobs) Memory.repairJobs = {};
 
 stratergy(intel);
 
+//console.log("Used "+ Game.getUsedCpu()+" of "+Game.cpuLimit+" CPU already");
 
 for(var name in Game.creeps) {
     //console.log('name', name);
 	var creep = Game.creeps[name];
+	var pre = Game.getUsedCpu()
+	doCreep(creep);
+	var post = Game.getUsedCpu();
+	var used = post-pre;
+	if(used > 2) {
+	    //console.log(name, 'used', used);
+	}
+}
+
+function doCreep(creep) {
+    
+    if(creep.memory.roleOverride) {
+        if(creep.memory.roleOverride.ttl <= 0){
+            delete creep.memory.roleOverride;
+        } else {
+            creep.memory.role = creep.memory.roleOverride.role;
+            creep.memory.roleOverride.ttl--;
+        }
+    }
+    
+    //console.log('Role: ', creep.role, typeof(creep[creep.role]))
+    //console.log('Role: ', creep.conv)
+    if(typeof(creep[creep.role]) === 'function') {
+        creep[creep.role](intel);
+    }
 
     if(creep.memory.role == 'guard') {
         var targets = creep.room.find(FIND_HOSTILE_CREEPS);
@@ -86,6 +122,8 @@ for(var name in Game.creeps) {
 	if(creep.memory.role == 'park') 	require('park')(creep);
 	
 	if(creep.memory.role == 'maintainer') 	require('maintainer')(creep, intel);
+	
+	if(creep.memory.role == 'explorer') explorer(creep, intel);
 }
 
 require('statManager')();

@@ -41,11 +41,22 @@ Game.registry = {
     register: register,
     eject: eject,
     getCreepName: getCreepName,
-    getCreep: getCreep
+    getCreep: getCreep,
+    killTrash: function(){
+        for(var name in Game.creeps) {
+       
+    	    var creep = Game.creeps[name];
+ 
+    	    if(creep.memory.role === 'park'){
+    	        console.log('Found trash to kill', creep);
+    	        creep.suicide();
+    	    }
+        }
+    }
 }
 
 for(var title in Memory.registerOnDeath) {
-    console.log('title=', title, 'getCreep(title)=', getCreep(title));
+    //console.log('title=', title, 'getCreep(title)=', getCreep(title));
     var creep = getCreep(title);
     if(!creep) {
         console.log('Creep '+title+' took over');
@@ -54,6 +65,7 @@ for(var title in Memory.registerOnDeath) {
     }
 }
 
+/*
 if(Memory.stratergy.registryAutoEject > 0) {
     for(var title in Memory.registry) {
         var creep = getCreep(title);
@@ -63,3 +75,4 @@ if(Memory.stratergy.registryAutoEject > 0) {
         }
     }
 }
+*/

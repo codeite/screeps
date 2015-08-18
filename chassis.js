@@ -3,8 +3,12 @@ costs[MOVE] = 50;
 costs[CARRY] = 50;
 costs[WORK] = 100;
 
+var version = 2;
+if(Memory.memorization.version != version ) Memory.memorization = {version: version};
 
 module.exports = {
+    rov: {parts: [MOVE], cost: 50},
+    ram: {parts: [MOVE, MOVE, ATTACK, ATTACK], cost: 260},
     basicWorker: {parts: [MOVE, CARRY, WORK], cost: 200},
     agileWorker: {parts: [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, WORK, WORK], cost: 500},
     heavyWorker: {parts: [MOVE, CARRY, CARRY, WORK, WORK, WORK, WORK], cost: 550},
@@ -74,11 +78,29 @@ function largestWorker(energy) {
     var parts = [MOVE, CARRY];
     
     var cost = costOfCassis(parts);
-    var max = 30;
-    for(;cost+100<=energy && max > 0; cost += 100, max--){
-        parts.push(WORK);
+    var moveParts = 1;
+    
+    for(var max = 30, i=0; cost<energy && max > 0; max--, i++){
+        
+       
+        var weightToMove = (parts.length-moveParts)/moveParts;
+         //console.log('x', parts, weightToMove);
+        var part;
+        if(weightToMove > 5){
+            part = MOVE;
+            moveParts++;
+        } else {
+            part = WORK;
+        }
+        
+        parts.push(part);
+        cost += costs[part];
       
         //console.log('cost', cost, 'parts:', parts);
+    }
+    while(cost > energy) {
+        parts.pop();
+        cost = costOfCassis(parts);
     }
     
     var result = {parts: parts, cost: cost};

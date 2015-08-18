@@ -1,45 +1,83 @@
+//Creep.prototype.roles.pumpStatic = static
+
 module.exports = {
-    static : function (creep) {
-    
-        if(creep.carry.energy < creep.carryCapacity) {
-            var e = creep.pos.lookFor('energy');
-            if(e.length)  creep.pickup(e[0]);
-        }
+    static: static,
+    mobile: mobile
+}
+function static (creep) {
+    if(creep.config.pos) {
+        if(!(creep.pos.x == creep.config.pos.x && creep.pos.y ==creep.config.pos.y)){
+            //console.log(creep, 'Moving into pos!');
+            creep.say('M');
+            creep.moveTo(creep.config.pos);
+        } 
+    }
+
+    if(creep.carry.energy < creep.carryCapacity) {
+        var e = creep.pos.lookFor('energy');
+        if(e.length)  creep.pickup(e[0]);
         
+        if(creep.room.rxLink && creep.pos.isNearTo(creep.room.rxLink)){
+            creep.room.rxLink.transferEnergy(creep);
+        }
+    }
+    
+    if(creep.pos.isNearTo(creep.room.controller)) {
+        
+        if(!creep.memory.travelTime) {
+	        creep.memory.travelTime = 1500 - creep.ticksToLive;
+	        Memory.stats.pumperTravelTime.push(creep.memory.travelTime);
+	    }
+        
+        if(creep.carry.energy > 0 && Memory.stratergy.pump) {
+            
+	        var res = creep.upgradeController(creep.room.controller);
+	        if(res === OK){
+	            Memory.stats.pumped += workRate(creep);
+	        }
+        }
+    } else {
+	    var res = creep.moveTo(creep.room.controller);
+	    
+	    if(res == ERR_NO_PATH) {
+	        var targets = creep.pos.findInRange(FIND_MY_CREEPS, 1);
+            if(targets.length > 0) {
+                for(var i in targets) {
+                    if(targets[i].role == 'tanker4') {
+                        console.log('GET OUT OF MY WAY', targets[i], '!!');
+                        targets[i].roleOverride('park', 5);
+                    }
+                }
+            }
+	    }
+	    
+	    //console.log(res);
+	}
+};
+
+function mobile (creep) {
+    
+    if(creep.carry.energy == 0) {
+        if(!creep.pos.isNearTo(Game.spawns.Spawn1)) {
+		    creep.moveTo(Game.spawns.Spawn1);
+        } else {
+		    Game.spawns.Spawn1.transferEnergy(creep);
+        }
+	} else {
 	    if(creep.pos.isNearTo(creep.room.controller)) {
-	        if(creep.carry.energy > 0 && Memory.stratergy.pump) {
-	            
-    	        var res = creep.upgradeController(creep.room.controller);
+	        if(Memory.stratergy.pump){
+	            var res = creep.upgradeController(creep.room.controller);
     	        if(res === OK){
     	            Memory.stats.pumped += workRate(creep);
     	        }
 	        }
 	    } else {
-		    creep.moveTo(creep.room.controller);
-    	}
-    },
-    mobile : function (creep) {
-        
-        if(creep.carry.energy == 0) {
-            if(!creep.pos.isNearTo(Game.spawns.Spawn1)) {
-    		    creep.moveTo(Game.spawns.Spawn1);
-            } else {
-    		    Game.spawns.Spawn1.transferEnergy(creep);
-            }
-    	} else {
-    	    if(creep.pos.isNearTo(creep.room.controller)) {
-    	        if(Memory.stratergy.pump){
-    	            var res = creep.upgradeController(creep.room.controller);
-        	        if(res === OK){
-        	            Memory.stats.pumped += workRate(creep);
-        	        }
-    	        }
-    	    } else {
-    		    creep.moveTo(creep.room.controller);
-    	    }
-    	}
-    }
-}
+		    var res = creep.moveTo(creep.room.controller);
+		  
+	    }
+	}
+};
+
 
 function workRate(creep) {
     var energy = creep.carry.energy;

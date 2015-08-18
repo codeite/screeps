@@ -1,3 +1,4 @@
+
 module.exports = function collectIntel(spawn) {
     if(!spawn) {
         console.log('No spawn');
@@ -19,6 +20,8 @@ module.exports = function collectIntel(spawn) {
         structures: 0
     };
     
+    intel.constructionSites = spawn.room.find(FIND_CONSTRUCTION_SITES);
+    
     intel.nearestEnergy = spawn.pos.findClosestByRange(FIND_SOURCES);
     
     // top left bottom right
@@ -31,7 +34,7 @@ module.exports = function collectIntel(spawn) {
             allStructures = spawn.room.memory.allStructures;
         }
         
-        var structureLook = spawn.room.lookForAtArea('structure', pos.y-2, pos.x-5, pos.y+4, pos.x+2);
+        var structureLook = spawn.room.lookForAtArea('structure', pos.y-2, pos.x-5, pos.y+7, pos.x+2);
         intel.structures = cleanLook(structureLook);
         intel.extensions = _.map(_.filter(intel.structures, function(x) { return x.structureType === STRUCTURE_EXTENSION;}), function(y){return {id:y.id, e: y.energyCapacity - y.energy};});
         
@@ -43,6 +46,7 @@ module.exports = function collectIntel(spawn) {
                 intel.progressLevel = 2.2
             }
         }
+        
         
         if(intel.progressLevel > 2.1) {
             _.each(intel.structures, function(v, k){
@@ -73,11 +77,30 @@ module.exports = function collectIntel(spawn) {
             }
         }
         
+        if(intel.controllerLevel >= 5) {
+            spawn.room.txLink = spawn.txLink = spawn.getTarget('L:nearestTo:Z');
+            spawn.room.rxLink = spawn.rxLink = spawn.getTarget('L:nearestTo:Ct');
+        }
+        
         //id327990
         //intel.energySources = spawn.room.find(FIND_SOURCES, {
         //    filter: function(object) { return object.id != 'id327990' }
         //});
         intel.farSources = _.filter(intel.energySources, function(x) {return x.id != intel.nearestEnergy.id; });
+    }
+    
+    if(!intel.importantPlaces) intel.importantPlaces = {};
+    
+    if(!intel.importantPlaces.storageAndTx || (Game.time % 600) === 0) {
+        intel.importantPlaces.storageAndTx = spawn.findPosNextTo('Z', 'L:nearestTo:Z');
+    }
+    
+    if(!intel.importantPlaces.sourceAndStorage || (Game.time % 600) === 0) {
+        intel.importantPlaces.sourceAndStorage = spawn.findPosNextTo('Sr', 'Z');
+    }
+    
+    if(!intel.importantPlaces.controllerAndRx || (Game.time % 600) === 0) {
+        intel.importantPlaces.controllerAndRx = spawn.findPosNextTo('Ct', 'L:nearestTo:Ct');
     }
     
     //console.log('intel.structures.length:', intel.structures.length, ' progressLevel:', intel.progressLevel);
