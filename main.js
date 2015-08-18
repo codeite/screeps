@@ -24,16 +24,12 @@ var collectIntel = require('collectIntel');
 
 //require('spawnList');
 var intel = collectIntel(Game.spawns.Spawn1);
-var stratergy = require('stratergy');
+var strategy = require('strategy');
 
-if(!Memory.idCache) Memory.idCache = {};
-if(!Memory.stats) Memory.stats = {};
-if(!Memory.stats.pumperTravelTime) Memory.stats.pumperTravelTime = [];
-if(!Memory.intel) Memory.intel = {};
-if(!Memory.memorization) Memory.memorization = {};
-if(!Memory.repairJobs) Memory.repairJobs = {};
-
-stratergy(intel);
+initMemory();
+Memory.stats.pumped = 0;
+    
+strategy(Game.spawns.Spawn1, intel);
 
 //console.log("Used "+ Game.getUsedCpu()+" of "+Game.cpuLimit+" CPU already");
 
@@ -124,6 +120,18 @@ function doCreep(creep) {
 	if(creep.memory.role == 'maintainer') 	require('maintainer')(creep, intel);
 	
 	if(creep.memory.role == 'explorer') explorer(creep, intel);
+}
+
+function initMemory() {
+    if(!Memory.idCache) Memory.idCache = {};
+    if(!Memory.stats) Memory.stats = {};
+    if(!Memory.stats.pumperTravelTime) Memory.stats.pumperTravelTime = [];
+    if(!Memory.intel) Memory.intel = {};
+    if(!Memory.memorization) Memory.memorization = {};
+    if(!Memory.repairJobs) Memory.repairJobs = {};
+    if(!Memory.stratergy) Memory.stratergy = { level: [], pump: true, build: true };
+    if(!Memory.stats) Memory.stats = {};
+    if(!Memory.memorization) Memory.memorization = {};
 }
 
 require('statManager')();
