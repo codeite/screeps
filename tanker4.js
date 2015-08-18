@@ -62,6 +62,9 @@ module.exports = function (creep) {
         if(creep.carry.energy === creep.carryCapacity) {
             creep.memory.mode = 'U';
             //creep.memory.dindex = (dindex+1)%destinations.length;
+        } else if(!source) {
+            //creep.say('No src');
+            //creep.moveTo(Game.flags.Park);
         }
         
     }

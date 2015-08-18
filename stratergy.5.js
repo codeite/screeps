@@ -33,20 +33,11 @@ function applyLevelFive(spawn, intel, army) {
     var heavyTransportId = 1;
     var pumperId = 1;
     
-    army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "S:Spawn1"} });
+    army.push({chassis: chassis.transporter(4), name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "S:Spawn1"} });
     army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
         
     if(false) {
-        for(var i=0; i<2; i++) { 
-            army.push({chassis: chassis.staticWorker(6, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
-        }
-        army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
-       
-        for(var i=0; i<1; i++) {
-            var builderName = 'HeavyWorker'+(heavyWorkerId++);
-            army.push({chassis: chassis.heavyWorker, name: builderName, role: 'builder.static'});
-            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'build', source: "Z", destination: "R:"+builderName} });
-        }
+       buildLinks(spawn, intel, army);
     } else {
         if(intel.importantPlaces.sourceAndStorage) {
             for(var i=0; i<intel.importantPlaces.sourceAndStorage.length; i++){
@@ -70,7 +61,8 @@ function applyLevelFive(spawn, intel, army) {
             var positions= intel.importantPlaces.controllerAndRx;
             for(var i=0; i<positions.length && i<1; i++) {
                 var pumperName = 'Pumper'+(pumperId++);
-                army.push({chassis: chassis.largestWorker(intel.maxEnergy), name: pumperName, role: 'pumper.static', config:{pos: positions[i]}});
+                if(Game.spawns.Spawn2)
+                    army.push({chassis: chassis.largestWorker(intel.maxEnergy), name: pumperName, role: 'pumper.static', config:{pos: positions[i]}});
             }
         } 
         army.push({chassis: chassis.agileWorker, name: 'Builder1', role: 'builder', config: {industry: 'construction', useClosestEnergy: true, maxAge: 0}});
@@ -86,7 +78,7 @@ function applyLevelFive(spawn, intel, army) {
         if(txLink && rxLink && txLink != rxLink && txLink.cooldown === 0) {
             //console.log('Good to send', txLink, rxLink);
             
-            if((rxLink.energy/rxLink.energyCapacity) < 0.7) {
+            if((rxLink.energy/rxLink.energyCapacity) < 0.1) {
                 txLink.transferEnergy(rxLink)
             }
         } else {
@@ -94,3 +86,17 @@ function applyLevelFive(spawn, intel, army) {
         }
     }
 }
+
+function buildLinks(spawn, intel, army) {
+    for(var i=0; i<2; i++) { 
+        army.push({chassis: chassis.staticWorker(6, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
+    }
+    army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
+    
+    for(var i=0; i<1; i++) {
+        var builderName = 'HeavyWorker'+(heavyWorkerId++);
+        army.push({chassis: chassis.heavyWorker, name: builderName, role: 'builder.static'});
+        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'build', source: "Z", destination: "R:"+builderName} });
+    }
+}
+

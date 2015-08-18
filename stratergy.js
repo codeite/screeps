@@ -129,8 +129,8 @@ module.exports = function(intel) {
     
     stratergyMaintanance.tick(spawn);
     
-    //console.log('Memory.stats.energyNeededForArmy', Memory.stats.energyNeededForArmy);
-    if(intel.reserves > 0.9 && Memory.stats.energyNeededForArmy <= 0) {
+    //console.log('spawn.storage.store.energy', spawn.storage.store.energy);
+    if((intel.reserves > 0.9 && Memory.stats.energyNeededForArmy <= 0) || (spawn.storage && spawn.storage.store.energy > 10000) ) {
         Memory.stratergy.preventBuild = false;
     } else {
         Memory.stratergy.preventBuild = true;
