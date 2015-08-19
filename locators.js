@@ -7,21 +7,19 @@ RoomPosition.prototype.findPosNextTo = findPosNextTo;
 Spawn.prototype.findPosNextTo = findPosNextTo;
 
 function getTarget(descriptor, memory) {
-    var pos, room;
+    var pos;
     if(this instanceof Creep){
-        room = this.room;
         pos = this.pos;
         memory = this.memory;
-    } else if(this instanceof RoomPosition) {
-        room = Game.rooms[pos.roomName];
+    } else if(this instanceof RoomPosition){
         pos = pos;
         memory = {};
-    } else if(this instanceof Spawn) {
-        room = this.room;
+    } else if(this instanceof Spawn){
         pos = this.pos;
         memory = this.memory;
     } else {
-        throw "Called getTarget on " + typeof(this);
+        pos = this;
+        memory = memory || {};
     }
     
     //console.log('this', this);
@@ -32,17 +30,15 @@ function getTarget(descriptor, memory) {
         var creep = Game.registry.getCreep(bits[1]);
         return creep;
     } else if(bits[0] == 'Ct') {
-       return room.controller;
+       return Game.spawns.Spawn1.room.controller;
     } else if(bits[0] == 'S') {
         return Game.spawns[bits[1]];
-    } else if(bits[0] == 'Sr') {
-        return room.rootSpawn;
     } else if(bits[0] == 'I') {
         var bid = Game.getObjectById[bits[1]];
         //console.log('bid', bid, bits[1]);
         return bid;
     } else if(bits[0] == 'Z') {
-        return room.storage;
+        return Game.spawns.Spawn1.storage;
     } else if(bits[0] == 'T') {
         return Game.structures[bits[1]];
     } else if(bits[0] == 'F') {

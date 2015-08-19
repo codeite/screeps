@@ -1,4 +1,4 @@
-module.exports = function (room) {
+module.exports = function () {
     var stats = Memory.stats;
     var intel = Memory.intel;
     
@@ -12,8 +12,8 @@ module.exports = function (room) {
     var totalPumped = _.sum(stats.pumpedHistory);
     var average = (totalPumped/stats.pumpedHistory.length).toFixed(2);
     
-    var ctrl = room.controller;
-    var storage = room.storage;
+    var ctrl = Game.spawns.Spawn1.room.controller;
+    var storage = Game.spawns.Spawn1.room.storage;
     var left = ctrl.progressTotal - ctrl.progress;
     //console.log('ctrl', ctrl.progress, ctrl.progressTotal);
     

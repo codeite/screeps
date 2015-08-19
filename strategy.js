@@ -31,4 +31,10 @@ module.exports = function(spawn, intel) {
         Memory.stratergy.preventBuild = true;
     }
     
+    if(spawn.storage && spawn.storage.store.energy < 10000) {
+        Memory.stratergy.pump = false;
+    } else {
+        Memory.stratergy.pump = true;
+    }
+    
 }

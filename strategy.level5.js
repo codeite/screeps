@@ -37,7 +37,7 @@ function applyLevelFive(spawn, intel, army) {
     var heavyTransportId = 1;
     var pumperId = 1;
     
-    army.push({chassis: chassis.transporter(4), name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "Sr"} });
+    army.push({chassis: chassis.transporter(4), name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "S:Spawn1"} });
     army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
         
     if(false) {
@@ -46,7 +46,7 @@ function applyLevelFive(spawn, intel, army) {
         if(intel.importantPlaces.sourceAndStorage) {
             for(var i=0; i<intel.importantPlaces.sourceAndStorage.length; i++){
                 var pos = intel.importantPlaces.sourceAndStorage[i];
-                army.push({chassis: chassis.staticWorker(6, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill', config:{pos: pos}});
+                army.push({chassis: chassis.staticWorker(1, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill', config:{pos: pos}});
             }
             army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
         } else {

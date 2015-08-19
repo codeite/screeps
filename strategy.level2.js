@@ -59,14 +59,14 @@ function applyLevelTwo(spawn, intel, army) {
         
         for(var i=0; i<2; i++) { 
           army.push({chassis: chassis.staticWorker(6), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
-          army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'harvest', source: "F", destination: "Sr"} }); 
+          army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker2'});
         }
         
         for(var i=0; i<1; i++) { 
             var pumperName = 'HeavyWorker'+(heavyWorkerId++);
             army.push({chassis: chassis.largestWorker(Memory.intel.maxEnergy), name: pumperName, role: 'pumper.static'});
-            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Sr", destination: "R:"+pumperName} }); 
-            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Sr", destination: "R:"+pumperName} });
+            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "S:Spawn1", destination: "R:"+pumperName} }); 
+            army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "S:Spawn1", destination: "R:"+pumperName} });
         }
         
         //for(var index in intel.farSources) {

@@ -1,5 +1,3 @@
-initMemory();
-
 require('registry');
 require('betterCreep');
 require('locators');
@@ -12,7 +10,7 @@ require('role.melee');
 var harvester = require('harvester');
 var builder = require('builder');
 var tanker = require('tanker');
-
+var tanker2 = require('tanker2');
 var tanker3 = require('tanker3');
 var maintainer = require('maintainer');
 var tanker4 = require('tanker4');
@@ -28,7 +26,7 @@ var collectIntel = require('collectIntel');
 var intel = collectIntel(Game.spawns.Spawn1);
 var strategy = require('strategy');
 
-
+initMemory();
 Memory.stats.pumped = 0;
     
 strategy(Game.spawns.Spawn1, intel);
@@ -78,6 +76,10 @@ function doCreep(creep) {
 	
 	if(creep.memory.role == 'tanker') {
 		tanker(creep);
+	}
+	
+	if(creep.memory.role == 'tanker2') {
+		tanker2(creep);
 	}
 	
 	if(creep.memory.role == 'tanker3') {
@@ -132,4 +134,4 @@ function initMemory() {
     if(!Memory.memorization) Memory.memorization = {};
 }
 
-require('statManager')(Game.spawns.Spawn1.room);
+require('statManager')();

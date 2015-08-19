@@ -3,7 +3,8 @@
 module.exports = {
     static: static,
     mobile: mobile
-}
+};
+
 function static (creep) {
     if(creep.config.pos) {
         if(!(creep.pos.x == creep.config.pos.x && creep.pos.y ==creep.config.pos.y)){
@@ -58,8 +59,8 @@ function static (creep) {
 function mobile (creep) {
     
     if(creep.carry.energy == 0) {
-        if(!creep.pos.isNearTo(creep.room.rootSpawn)) {
-		    creep.moveTo(creep.room.rootSpawn);
+        if(!creep.pos.isNearTo(Game.spawns.Spawn1)) {
+		    creep.moveTo(Game.spawns.Spawn1);
         } else {
 		    Game.spawns.Spawn1.transferEnergy(creep);
         }

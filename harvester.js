@@ -26,19 +26,11 @@ module.exports = function (creep) {
 		    creep.harvest(source);
 	    }
 	} else {
-
-      var target;
-
-      if(creep.room.storage) {
-        target = creep.room.storage;
-      } else {
-        target = creep.room.rootSpawn;
-      }
 	    
-	    if(!creep.pos.isNearTo(target)) {
-		    creep.moveTo(target);
+	    if(!creep.pos.isNearTo(Game.spawns.Spawn1.room.storage)) {
+		    creep.moveTo(Game.spawns.Spawn1.room.storage);
 	    } else {
-		    creep.transferEnergy(target);
+		    creep.transferEnergy(Game.spawns.Spawn1.room.storage);
 	    }
 	}
     }catch(e) {
