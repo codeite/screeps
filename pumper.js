@@ -64,11 +64,11 @@ function mobile (creep) {
         if(!creep.pos.isNearTo(creep.room.rootSpawn)) {
 		    creep.moveTo(creep.room.rootSpawn);
         } else {
-		    Game.spawns.Spawn1.transferEnergy(creep);
+		    creep.room.rootSpawn.transferEnergy(creep);
         }
 	} else {
 	    if(creep.pos.isNearTo(creep.room.controller)) {
-	        if(Memory.stratergy.pump){
+	        if(creep.room.memory.strategy.pump){
 	            var res = creep.upgradeController(creep.room.controller);
     	        if(res === OK){
     	            Memory.stats.pumped += workRate(creep);
