@@ -95,12 +95,14 @@ module.exports = function collectIntel(spawn) {
     
     if(!intel.importantPlaces) intel.importantPlaces = {};
     
-    if(!intel.importantPlaces.storageAndTx || (Game.time % 600) === 0) {
-        intel.importantPlaces.storageAndTx = spawn.findPosNextTo('Z', 'L:nearestTo:Z');
-    }
+    if(room.storage){
+        if(!intel.importantPlaces.storageAndTx || (Game.time % 600) === 0) {
+            intel.importantPlaces.storageAndTx = spawn.findPosNextTo('Z', 'L:nearestTo:Z');
+        }
     
-    if(!intel.importantPlaces.sourceAndStorage || (Game.time % 600) === 1) {
-        intel.importantPlaces.sourceAndStorage = spawn.findPosNextTo('Sr', 'Z');
+        if(!intel.importantPlaces.sourceAndStorage || (Game.time % 2) === 1) {
+            intel.importantPlaces.sourceAndStorage = spawn.findPosNextTo('E', 'Z');
+        }
     }
     
     if(!intel.importantPlaces.controllerAndRx || (Game.time % 600) === 2) {

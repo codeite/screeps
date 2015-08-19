@@ -69,7 +69,7 @@ function getTarget(descriptor, memory) {
             });
             return links[0];
         }
-    } else if(bits[0] === 'Sr') {
+    } else if(bits[0] === 'E') {
         var index = 0;
         if(bits[1] === 'index') {
             index = ~~bits[3];
@@ -82,6 +82,8 @@ function getTarget(descriptor, memory) {
 function findPosNextTo(idA, idB) {
     var a = this.getTarget(idA);
     var b = this.getTarget(idB);
+    
+    console.log(a, b);
     
     if(!a || !b) return [];
     var aPos = a.pos;

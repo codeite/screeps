@@ -37,7 +37,7 @@ function applyLevelFive(spawn, intel, army) {
     var heavyTransportId = 1;
     var pumperId = 1;
     
-    //army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+i, role: 'harvester', config: {industry: 'energy'}});
+    army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+i, role: 'harvester', config: {industry: 'energy'}});
     
     army.push({chassis: chassis.transporter(4), name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "Sr"} });
     army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
@@ -45,20 +45,20 @@ function applyLevelFive(spawn, intel, army) {
     if(false) {
        buildLinks(spawn, intel, army);
     } else {
-        if(intel.importantPlaces.sourceAndStorage) {
+        if(intel.importantPlaces.sourceAndStorage && intel.importantPlaces.sourceAndStorage.length) {
             for(var i=0; i<intel.importantPlaces.sourceAndStorage.length; i++){
                 var pos = intel.importantPlaces.sourceAndStorage[i];
                 army.push({chassis: chassis.staticWorker(1, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill', config:{pos: pos}});
             }
             army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
         } else {
-            army.push({chassis: chassis.staticWorker(6, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
+            army.push({chassis: chassis.staticWorker(3, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
             army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
-            army.push({chassis: chassis.staticWorker(6, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
+            army.push({chassis: chassis.staticWorker(3, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
         }
         
     
-        army.push({chassis: chassis.rov, name: 'rov1', role: 'flagPlanter', config: {industry: 'military', flag: "HoldingFlag1", roomName:"W9N8"} });
+        //army.push({chassis: chassis.rov, name: 'rov1', role: 'flagPlanter', config: {industry: 'military', flag: "HoldingFlag1", roomName:"W9N8"} });
             
         //army.push({chassis: chassis.ram, name: 'ram', role: 'melee', config: {industry: 'military', flag: "AttackFlag1", roomName:"W9N8"} });
         
