@@ -56,7 +56,7 @@ function applyLevelTwo(spawn, intel, army, stratergy) {
         Memory.stats.havesterCount = havesterCount;
         Memory.stats.builderCount = builderCount;
         
-        for(var i=0; i<havesterCount; i++) army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'harvester'});
+        for(var i=0; i<havesterCount; i++) army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'harvester', config: {industry: 'energy', pos: intel.energySites[(i-1)%intel.energySites.length]}});
         for(var i=0; i<builderCount; i++) army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+(workerId++), role: 'builder', config:{industry: 'construction', useClosestEnergy: true, maxAge: 0}});
 
         if(intel.extensions.length > 0) {

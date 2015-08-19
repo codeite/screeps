@@ -124,5 +124,25 @@ RoomPosition.prototype.getAdjacentPositions = function() {
     return positions;
 };
 
+RoomPosition.prototype.closestOf = function(positions) {
+    return positions[0];
+    var closest = null;
+    var closestD = 9999999999
+
+    for(var i=0; i<positions.length; i++) {
+        var dx = this.x - positions[i].x;
+        var dy = this.y - positions[i].y;
+
+        var d = (dx*dx) + (dy*dx);
+
+        if(d < closestD) {
+            closest = positions[i];
+            closestD = d;
+        }
+    }
+
+    return closest;
+};
+
 
 

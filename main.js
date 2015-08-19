@@ -139,4 +139,8 @@ function initMemory() {
     })
 }
 
-require('statManager')(Game.spawns.Spawn1.room);
+for(var spawnName in Game.spawns) {
+  var spawn = Game.spawns[spawnName];
+  require('statManager')(spawn.room);
+}
+

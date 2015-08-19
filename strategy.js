@@ -9,8 +9,10 @@ module.exports = function(spawn, intel) {
     var army = [];
 
     var strategy = spawn.room.memory.strategy;
-    
-    if(intel.controllerLevel === 1) {
+    var stats = spawn.room.memory.strategy;
+    if(intel.controllerLevel === 0) {
+        return;
+    } else if(intel.controllerLevel === 1) {
         require('strategy.level1').applyStrategy(spawn, intel, army, strategy);
     } else if(intel.controllerLevel === 2 || intel.controllerLevel === 3) {
         require('strategy.level2').applyStrategy(spawn, intel, army, strategy);
@@ -37,7 +39,7 @@ module.exports = function(spawn, intel) {
         if(intel.reserves < 0.9){
             strategy.preventBuild = true;
             strategy.preventBuildReason = 'Reserves ('+((intel.reserves*100).toFixed(1))+'%) are less than 90%';
-        } else if(Memory.stats.energyNeededForArmy > 0) {
+        } else if(stats.energyNeededForArmy > 0) {
             strategy.preventBuild = true;
             strategy.preventBuildReason = 'EnergyNeededForArmy ('+(Memory.stats.energyNeededForArmy)+'%) is greater than zero';
         } else {
@@ -46,9 +48,9 @@ module.exports = function(spawn, intel) {
     }
     
     if(spawn.storage && spawn.storage.store.energy < 10000) {
-        Memory.stratergy.pump = false;
+        strategy.pump = false;
     } else {
-        Memory.stratergy.pump = true;
+        strategy.pump = true;
     }
     
 }

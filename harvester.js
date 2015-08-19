@@ -2,6 +2,20 @@ module.exports = function (creep) {
 
 	if(creep.carry.energy < creep.carryCapacity) {
 	    var source;
+      var pos = creep.config.pos;
+      if(pos) {
+        if(pos.x != creep.x || pos.y != creep.y ) {
+
+          creep.moveTo(pos.x, pos.y);
+          return;
+        } else {
+          if(pos.sourceId){
+            creep.memory.sourceId = pos.sourceId;
+          }
+          
+        }
+      }
+
 	    if(creep.memory.sourceId) {
 	        source = Game.getObjectById(creep.memory.sourceId);
 	        if(!source) creep.memory.sourceId = null;
@@ -17,7 +31,7 @@ module.exports = function (creep) {
                 }
 	        }
 	    } else {
-		    source = creep.room.find(FIND_SOURCES)[0];
+		    source = creep.pos.findClosestByRange(FIND_SOURCES);
 	    }
 	    
 	    if(!creep.pos.isNearTo(source)) {

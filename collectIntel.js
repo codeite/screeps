@@ -4,17 +4,63 @@ module.exports = function collectIntel(spawn) {
         console.log('No spawn');
         return null;
     }
+
     var room = spawn.room;
     room.rootSpawn = spawn;
     
     var pos = spawn.pos;
-    var intel = {
+    var intel = room.memory.intel || {
         controllerLevel: room.controller.level,
         progressLevel: room.controller.level,
         totalEnergy: spawn.energy,
         maxEnergy: spawn.energyCapacity,
         structures: 0
     };
+
+    // console.log(intel.energySites.map(function(s){ return s.x+','+s.y+'; ';}));
+
+    if(!intel.energySites) {
+        var sites = [];
+        var usedSources = [];
+        var source;
+
+        do {
+            var source = spawn.pos.findClosest(FIND_SOURCES, {
+                filter: function(source) {
+                    return usedSources.indexOf(source) == -1;
+                }
+            });
+            //console.log('source', source, source.pos);
+
+
+            if(source) {
+                usedSources.push(source)
+
+                var possiblePositions = source.pos.getAdjacentPositions();
+                possiblePositions = _.filter(possiblePositions, function(pos) {
+                    var found = pos.lookFor('terrain');
+                    return found[0] == 'plain';
+                });
+                //console.log('possiblePositions', possiblePositions);
+
+                while(possiblePositions.length) {
+                    var closest = spawn.pos.closestOf(possiblePositions);
+                    possiblePositions.splice(possiblePositions.indexOf(closest), 1);
+                    sites.push({
+                        x: closest.x,
+                        y: closest.y,
+                        sourceId: source.id
+                    });
+                }
+            }
+
+        } while(sites.length < 3 && source);
+
+        intel.energySites = sites;
+    }
+
+
+
     
     var allConstructionSites = room.find(FIND_CONSTRUCTION_SITES); 
     intel.constructionSites = allConstructionSites;

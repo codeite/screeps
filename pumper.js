@@ -32,7 +32,7 @@ function immobile (creep) {
 	    }
         */
         
-        if(creep.carry.energy > 0 && Memory.stratergy.pump) {
+        if(creep.carry.energy > 0 && creep.room.memory.strategy.pump) {
             
 	        var res = creep.upgradeController(creep.room.controller);
 	        if(res === OK){
@@ -71,7 +71,7 @@ function mobile (creep) {
 	        if(creep.room.memory.strategy.pump){
 	            var res = creep.upgradeController(creep.room.controller);
     	        if(res === OK){
-    	            Memory.stats.pumped += workRate(creep);
+    	            creep.room.memory.stats.pumped += workRate(creep);
     	        }
 	        }
 	    } else {
