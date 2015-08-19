@@ -1,3 +1,5 @@
+var chassis = require('chassis');
+
 module.exports = {
     applyStrategy: applyLevelOne
 };

@@ -61,7 +61,8 @@ function maintainArmy(spawn, army, intel) {
     var stats = intel.stats;
     var inService = 0, armyCost = 0;
     var oldest = null;
-    
+    var missing = null;
+
     for(var i=0; i<army.length; i++) {
         var blueprint = army[i];
         var res = createChassis(spawn, energy, blueprint.chassis, blueprint.name, blueprint.role, blueprint.config);
@@ -69,6 +70,10 @@ function maintainArmy(spawn, army, intel) {
         inService += res.existing;
         energyNeeded += res.energyNeeded;
         armyCost += blueprint.chassis.cost;
+
+        if(!missing && res.existing === 0 && res.energyUsed === 0) {
+            missing = army[i];
+        }
         
         if(res.creep) {
             if(!oldest || res.creep.ticksToLive < oldest.ticksToLive) {
@@ -85,13 +90,21 @@ function maintainArmy(spawn, army, intel) {
             }
         }
     }
+
+    //console.log('spawn.room:',spawn.room.memory);
+    var roomStats = spawn.room.memory.stats;
     
-    Memory.stats.energyNeededForArmy = energyNeeded;
-    Memory.stats.army= 'Army size:'+ army.length+ " inService:"+inService+" missing:"+ (army.length - inService) + ' Energy needed:'+energyNeeded+
+    roomStats.energyNeededForArmy = energyNeeded;
+    roomStats.army= 'Army size:'+ army.length+ " inService:"+inService+" missing:"+ (army.length - inService) + ' Energy needed:'+energyNeeded+
       ' Army cost:' + armyCost + ' (about '+(Math.floor(armyCost/24))+' per minute)';
       
     if(oldest) {
-        Memory.stats.army += ' Oldest creep: ' + oldest.name + ' (ttl: '+oldest.ticksToLive +')';
+        roomStats.army += '\nOldest creep: ' + oldest.name + ' (ttl: '+oldest.ticksToLive +')';
+    }
+
+    if(missing) {
+        roomStats.army += '\nNext missing creep: ' + missing.name + ' ('+missing.role+' '+missing.chassis.name+'=$'+missing.chassis.cost +')';
+   
     }
     //console.log('army',_.map(army, function(x){return x.name;}));
 }

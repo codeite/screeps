@@ -21,7 +21,7 @@ function upgradeToLevelFive(spawn) {
         spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+7, STRUCTURE_EXTENSION);
     }
     
-    Memory.stratergy.roads5 = roads;
+    spawn.room.memory.roads4 = roads;
     Memory.stratergy.level[spawn.name] = 5;
 }
 
@@ -37,7 +37,7 @@ function applyLevelFive(spawn, intel, army) {
     var heavyTransportId = 1;
     var pumperId = 1;
     
-    army.push({chassis: chassis.transporter(4), name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "S:Spawn1"} });
+    army.push({chassis: chassis.transporter(4), name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "Sr"} });
     army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
         
     if(false) {
@@ -66,7 +66,7 @@ function applyLevelFive(spawn, intel, army) {
             for(var i=0; i<positions.length && i<1; i++) {
                 var pumperName = 'Pumper'+(pumperId++);
                 if(Game.spawns.Spawn2)
-                    army.push({chassis: chassis.largestWorker(intel.maxEnergy), name: pumperName, role: 'pumper.static', config:{pos: positions[i]}});
+                    army.push({chassis: chassis.largestWorker(intel.maxEnergy), name: pumperName, role: 'pumper.immobile', config:{pos: positions[i]}});
             }
         } 
         army.push({chassis: chassis.agileWorker, name: 'Builder1', role: 'builder', config: {industry: 'construction', useClosestEnergy: true, maxAge: 0}});

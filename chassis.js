@@ -3,17 +3,17 @@ costs[MOVE] = 50;
 costs[CARRY] = 50;
 costs[WORK] = 100;
 
-var version = 2;
+var version = 3;
 if(Memory.memorization.version != version ) Memory.memorization = {version: version};
 
 module.exports = {
-    rov: {parts: [MOVE], cost: 50},
-    ram: {parts: [MOVE, MOVE, ATTACK, ATTACK], cost: 260},
-    basicWorker: {parts: [MOVE, CARRY, WORK], cost: 200},
-    agileWorker: {parts: [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, WORK, WORK], cost: 500},
-    heavyWorker: {parts: [MOVE, CARRY, CARRY, WORK, WORK, WORK, WORK], cost: 550},
-    lightTransport: {parts: [MOVE, MOVE, CARRY, CARRY], cost: 300},
-    heavyTransport: {parts: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], cost: 550},
+    rov: {name: 'rov', parts: [MOVE], cost: 50},
+    ram: {name: '', parts: [MOVE, MOVE, ATTACK, ATTACK], cost: 260},
+    basicWorker: {name: 'basicWorker', parts: [MOVE, CARRY, WORK], cost: 200},
+    agileWorker: {name: 'agileWorker', parts: [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, WORK, WORK], cost: 500},
+    heavyWorker: {name: 'heavyWorker', parts: [MOVE, CARRY, CARRY, WORK, WORK, WORK, WORK], cost: 550},
+    lightTransport: {name: 'lightTransport', parts: [MOVE, MOVE, CARRY, CARRY], cost: 300},
+    heavyTransport: {name: 'heavyTransport', parts: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], cost: 550},
 
     costOf: costOf,
     costOfCassis: costOfCassis,
@@ -34,7 +34,7 @@ function transporter(carryParts) {
     }
     
      var cost = costOfCassis(parts);
-    var result = {parts: parts, cost: cost};
+    var result = {name: 'transporter('+carryParts+')', parts: parts, cost: cost};
     
     if(!Memory.memorization.tanker) Memory.memorization.tanker = {};
     Memory.memorization.tanker[carryParts] = result;
@@ -62,7 +62,7 @@ function staticWorker(workerParts, haveCarry) {
     }
     
     var cost = costOfCassis(parts);
-    var result = {parts: parts, cost: cost};
+    var result = {name: 'staticWorker('+workerParts+', '+(haveCarry?+'haveCarry':'no-haveCarry')+')', parts: parts, cost: cost};
     //console.log('working on largestWorker in',energy, 'out:',result.cost);
     
     if(!Memory.memorization.staticWorker) Memory.memorization.staticWorker = {};
@@ -103,7 +103,7 @@ function largestWorker(energy) {
         cost = costOfCassis(parts);
     }
     
-    var result = {parts: parts, cost: cost};
+    var result = {name: 'largestWorker('+energy+')', parts: parts, cost: cost};
     //console.log('working on largestWorker in',energy, 'out:',result.cost);
     
     if(!Memory.memorization.largestWorker) Memory.memorization.largestWorker = {};

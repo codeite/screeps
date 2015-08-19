@@ -1,3 +1,5 @@
+initMemory();
+//console.log('Tick:', Game.time);
 require('registry');
 require('betterCreep');
 require('locators');
@@ -10,7 +12,7 @@ require('role.melee');
 var harvester = require('harvester');
 var builder = require('builder');
 var tanker = require('tanker');
-var tanker2 = require('tanker2');
+
 var tanker3 = require('tanker3');
 var maintainer = require('maintainer');
 var tanker4 = require('tanker4');
@@ -23,13 +25,14 @@ var explorer = require('explorer');
 var collectIntel = require('collectIntel');
 
 //require('spawnList');
-var intel = collectIntel(Game.spawns.Spawn1);
+
 var strategy = require('strategy');
 
-initMemory();
-Memory.stats.pumped = 0;
-    
-strategy(Game.spawns.Spawn1, intel);
+for(var spawnName in Game.spawns) {
+  var spawn = Game.spawns[spawnName];
+  spawn.room.intel = collectIntel(spawn);
+  strategy(spawn, spawn.room.intel);
+}
 
 //console.log("Used "+ Game.getUsedCpu()+" of "+Game.cpuLimit+" CPU already");
 
@@ -59,7 +62,7 @@ function doCreep(creep) {
     //console.log('Role: ', creep.role, typeof(creep[creep.role]))
     //console.log('Role: ', creep.conv)
     if(typeof(creep[creep.role]) === 'function') {
-        creep[creep.role](intel);
+        creep[creep.role](creep.room.intel);
     }
 
     if(creep.memory.role == 'guard') {
@@ -76,10 +79,6 @@ function doCreep(creep) {
 	
 	if(creep.memory.role == 'tanker') {
 		tanker(creep);
-	}
-	
-	if(creep.memory.role == 'tanker2') {
-		tanker2(creep);
 	}
 	
 	if(creep.memory.role == 'tanker3') {
@@ -106,8 +105,8 @@ function doCreep(creep) {
 		forklift(creep);
 	}
 	
-	if(creep.memory.role == 'pumper' || creep.memory.role == 'pumper.static') {
-		pumper.static(creep);
+	if(creep.memory.role == 'pumper' || creep.memory.role == 'pumper.immobile') {
+		pumper.immobile(creep);
 	}
 	
 	if(creep.memory.role == 'pumper.mobile') {
@@ -117,21 +116,27 @@ function doCreep(creep) {
 	if(creep.memory.role == 'roadBuilder') 	require('roadBuilder')(creep);
 	if(creep.memory.role == 'park') 	require('park')(creep);
 	
-	if(creep.memory.role == 'maintainer') 	require('maintainer')(creep, intel);
+	if(creep.memory.role == 'maintainer') 	require('maintainer')(creep, creep.room.intel);
 	
-	if(creep.memory.role == 'explorer') explorer(creep, intel);
+	if(creep.memory.role == 'explorer') explorer(creep, creep.room.intel);
 }
 
 function initMemory() {
     if(!Memory.idCache) Memory.idCache = {};
-    if(!Memory.stats) Memory.stats = {};
-    if(!Memory.stats.pumperTravelTime) Memory.stats.pumperTravelTime = [];
-    if(!Memory.intel) Memory.intel = {};
     if(!Memory.memorization) Memory.memorization = {};
-    if(!Memory.repairJobs) Memory.repairJobs = {};
-    if(!Memory.stratergy) Memory.stratergy = { level: [], pump: true, build: true };
-    if(!Memory.stats) Memory.stats = {};
-    if(!Memory.memorization) Memory.memorization = {};
+
+    var roomNames = Object.keys(Game.rooms);
+    roomNames.forEach(function (roomName){
+      if(!Memory.rooms[roomName]) Memory.rooms[roomName] = {};
+      var roomMem = Memory.rooms[roomName];
+      
+      if(!roomMem.stats) roomMem.stats = {};
+      if(!roomMem.strategy) roomMem.strategy = { level: [], pump: true, build: true };
+      if(!roomMem.repairJobs) roomMem.repairJobs = {};
+      if(!roomMem.intel) roomMem.intel = {};
+
+      roomMem.stats.pumped = 0;
+    })
 }
 
-require('statManager')();
+require('statManager')(Game.spawns.Spawn1.room);

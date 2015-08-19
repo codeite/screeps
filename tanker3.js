@@ -2,9 +2,8 @@ module.exports = function (creep) {
     //creep.say('E'+creep.carry.energy);
     var res = 0;
     
-    var config = creep.memory.config || {};
-    var source = Game.getObjectById(config.source);
-    var destinations = config.destination.split(';');
+    var source = Game.getObjectById(creep.config.source);
+    var destinations = creep.config.destination.split(';');
     var dindex = ~~creep.memory.dindex;
     
     var destination = Game.getObjectById(destinations[dindex]);

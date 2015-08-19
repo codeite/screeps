@@ -1,16 +1,12 @@
 module.exports = function (creep) {
 
-  if(!creep.memory.config) {
-        creep.memory.config = {};
+
+    if(!creep.config.flag) {
+        creep.config.flag = 'Park';
     }
 
-
-    if(!creep.memory.config.flag) {
-        creep.memory.config.flag = 'Park';
-    }
-
-    if(creep.memory.config.flag) {
-        var flag = Game.flags[creep.memory.config.flag];
+    if(creep.config.flag) {
+        var flag = Game.flags[creep.config.flag];
         
         if(flag){
             creep.moveTo(flag);
@@ -19,8 +15,8 @@ module.exports = function (creep) {
     }
 
     if(creep.carry.energy > 0){
-	    creep.moveTo(Game.spawns.Spawn1);
-		creep.transferEnergy(Game.spawns.Spawn1)
+	    creep.moveTo(creep.room.rootSpawn);
+		creep.transferEnergy(creep.room.rootSpawn)
     } else if(Game.flags.Park) {
 		creep.moveTo(Game.flags.Park);    
     }

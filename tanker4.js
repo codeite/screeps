@@ -2,23 +2,19 @@
 module.exports = function (creep) {
     //creep.say('E'+creep.carry.energy);
     var res = 0;
+
     
-    
-    
-    
-    var config = creep.memory.config || {};
-    
-    //console.log('tanker4:', config.industry, Memory.stratergy.pump)
-    if(config.industry == 'pump' && Memory.stratergy.pump === false) {
-        creep.moveTo(Game.spawns.Spawn1);
-        creep.transferEnergy(Game.spawns.Spawn1);
+    //console.log('tanker4:', creep.config.industry, Memory.stratergy.pump)
+    if(creep.config.industry == 'pump' && Memory.stratergy.pump === false) {
+        creep.moveTo(creep.room.rootSpawn);
+        creep.transferEnergy(creep.room.rootSpawn);
         //creep.say('pump - off');
         return;
     }
     
     
-    var source = creep.getTarget(config.source, creep);
-    var destinations = config.destination.split(';');
+    var source = creep.getTarget(creep.config.source, creep);
+    var destinations = creep.config.destination.split(';');
     var dindex = ~~creep.memory.dindex;
     
     var destination = creep.getTarget(destinations[dindex], creep);

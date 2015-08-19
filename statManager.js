@@ -1,6 +1,6 @@
-module.exports = function () {
-    var stats = Memory.stats;
-    var intel = Memory.intel;
+module.exports = function (room) {
+    var stats = room.memory.stats;
+    var intel = room.memory.intel;
     
     if(!stats.pumpedHistory) stats.pumpedHistory = [];
     
@@ -12,8 +12,8 @@ module.exports = function () {
     var totalPumped = _.sum(stats.pumpedHistory);
     var average = (totalPumped/stats.pumpedHistory.length).toFixed(2);
     
-    var ctrl = Game.spawns.Spawn1.room.controller;
-    var storage = Game.spawns.Spawn1.room.storage;
+    var ctrl = room.controller;
+    var storage = room.storage;
     var left = ctrl.progressTotal - ctrl.progress;
     //console.log('ctrl', ctrl.progress, ctrl.progressTotal);
     

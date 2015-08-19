@@ -3,8 +3,10 @@ module.exports = {
     tick : function (spawn) {
         
         if(Game.time % 3 === 0) {
-            var roads = Memory.stratergy.roads4;
-            if(Memory.stratergy.roads4) roads = roads.concat(Memory.stratergy.roads5);
+            var roads = [];
+            if(spawn.room.memory.roads3) roads = roads.concat(spawn.room.memory.roads3);
+            if(spawn.room.memory.roads4) roads = roads.concat(spawn.room.memory.roads4);
+            if(spawn.room.memory.roads5) roads = roads.concat(spawn.room.memory.roads5);
             
             var totalHits = 0;
             var roadCount = 0
@@ -31,7 +33,10 @@ module.exports = {
                }
             });
             
-            Memory.stats.roads = 'There are '+roadCount+' out of '+expectedRoads+'. Their average condition is '+(~~(100*totalHits/roadCount))+'%. Open repair jobs: '+( Object.keys(Memory.repairJobs).length);
+            spawn.room.memory.stats.roads = 
+              'There are '+roadCount+' out of '+expectedRoads+'. '+
+              'Their average condition is '+(~~(100*totalHits/roadCount))+'%. '+
+              'Open repair jobs: '+( Object.keys(spawn.room.memory.repairJobs).length);
         }
     }
 };

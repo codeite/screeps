@@ -1,11 +1,11 @@
 //Creep.prototype.roles.pumpStatic = static
 
 module.exports = {
-    static: static,
+    immobile: immobile,
     mobile: mobile
 };
 
-function static (creep) {
+function immobile (creep) {
     if(creep.config.pos) {
         if(!(creep.pos.x == creep.config.pos.x && creep.pos.y ==creep.config.pos.y)){
             //console.log(creep, 'Moving into pos!');
@@ -25,10 +25,12 @@ function static (creep) {
     
     if(creep.pos.isNearTo(creep.room.controller)) {
         
+        /*
         if(!creep.memory.travelTime) {
 	        creep.memory.travelTime = 1500 - creep.ticksToLive;
 	        Memory.stats.pumperTravelTime.push(creep.memory.travelTime);
 	    }
+        */
         
         if(creep.carry.energy > 0 && Memory.stratergy.pump) {
             
@@ -59,8 +61,8 @@ function static (creep) {
 function mobile (creep) {
     
     if(creep.carry.energy == 0) {
-        if(!creep.pos.isNearTo(Game.spawns.Spawn1)) {
-		    creep.moveTo(Game.spawns.Spawn1);
+        if(!creep.pos.isNearTo(creep.room.rootSpawn)) {
+		    creep.moveTo(creep.room.rootSpawn);
         } else {
 		    Game.spawns.Spawn1.transferEnergy(creep);
         }

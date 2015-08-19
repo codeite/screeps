@@ -2,15 +2,15 @@ module.exports = function (creep, intel) {
     //creep.say('E'+creep.carry.energy);
     var res = 0;
     //return;
-    var config = creep.memory.config || {};
-    var source = Game.spawns.Spawn1;
+    var source = creep.room.rootSpawn;
    
     var dindex = ~~creep.memory.dindex;
     
     var extensions = intel.extensions;
     var loops =  extensions.length;
-    
-    while(extensions[dindex].e == 0 && loops > 0) {
+   
+   
+    while(extensions[dindex].energy == extensions[dindex].energyCapacity && loops > 0) {
         dindex = (dindex+1)%extensions.length;
         loops--;
     }

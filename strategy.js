@@ -7,28 +7,42 @@ var stratergyMaintanance = require('stratergy.maintanance');
 
 module.exports = function(spawn, intel) {
     var army = [];
+
+    var strategy = spawn.room.memory.strategy;
     
     if(intel.controllerLevel === 1) {
-        require('strategy.level1').applyStrategy(spawn, intel, army);
+        require('strategy.level1').applyStrategy(spawn, intel, army, strategy);
     } else if(intel.controllerLevel === 2 || intel.controllerLevel === 3) {
-        require('strategy.level2').applyStrategy(spawn, intel, army);
+        require('strategy.level2').applyStrategy(spawn, intel, army, strategy);
     } else if(intel.controllerLevel === 4) {
-        require('strategy.level4').applyStrategy(spawn, intel, army);
+        require('strategy.level4').applyStrategy(spawn, intel, army, strategy);
     } else {
-        require('strategy.level5').applyStrategy(spawn, intel, army);
+        require('strategy.level5').applyStrategy(spawn, intel, army, strategy);
     }
     
-    applyInvasion.applyInvasion(spawn, intel, army);
-    
+    if(spawn.room.storage && spawn.room.storage.store.energy > 10000) {
+        applyInvasion.applyInvasion(spawn, intel, army);
+    }   
+    strategy.army = army;
+
     armyManager.maintainArmy(spawn, army, intel);
     
     stratergyMaintanance.tick(spawn);
     
-    //console.log('spawn.storage.store.energy', spawn.storage.store.energy);
-    if((intel.reserves > 0.9 && Memory.stats.energyNeededForArmy <= 0) || (spawn.storage && spawn.storage.store.energy > 10000) ) {
-        Memory.stratergy.preventBuild = false;
+    strategy.preventBuildReason = '';
+    if(spawn.storage && spawn.storage.store.energy > 10000) {
+        strategy.preventBuild = false;
     } else {
-        Memory.stratergy.preventBuild = true;
+        
+        if(intel.reserves < 0.9){
+            strategy.preventBuild = true;
+            strategy.preventBuildReason = 'Reserves ('+((intel.reserves*100).toFixed(1))+'%) are less than 90%';
+        } else if(Memory.stats.energyNeededForArmy > 0) {
+            strategy.preventBuild = true;
+            strategy.preventBuildReason = 'EnergyNeededForArmy ('+(Memory.stats.energyNeededForArmy)+'%) is greater than zero';
+        } else {
+            strategy.preventBuild = false;
+        }
     }
     
     if(spawn.storage && spawn.storage.store.energy < 10000) {

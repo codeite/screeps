@@ -1,12 +1,12 @@
 module.exports = function (creep) {
-    try {
+
 	if(creep.carry.energy < creep.carryCapacity) {
 	    var source;
 	    if(creep.memory.sourceId) {
 	        source = Game.getObjectById(creep.memory.sourceId);
 	        if(!source) creep.memory.sourceId = null;
-	    } else if(creep.memory.config.flag) {
-	        var flag = Game.flags[creep.memory.config.flag];
+	    } else if(creep.config.flag) {
+	        var flag = Game.flags[creep.config.flag];
 
 	        
 	        if(false && flag){
@@ -26,14 +26,20 @@ module.exports = function (creep) {
 		    creep.harvest(source);
 	    }
 	} else {
+
+      var target;
+
+      if(creep.room.storage) {
+        target = creep.room.storage;
+      } else {
+        target = creep.room.rootSpawn;
+      }
 	    
-	    if(!creep.pos.isNearTo(Game.spawns.Spawn1.room.storage)) {
-		    creep.moveTo(Game.spawns.Spawn1.room.storage);
+	    if(!creep.pos.isNearTo(target)) {
+		    creep.moveTo(target);
 	    } else {
-		    creep.transferEnergy(Game.spawns.Spawn1.room.storage);
+		    creep.transferEnergy(target);
 	    }
 	}
-    }catch(e) {
-        console.log('Error:', e);
-    }
+
 }

@@ -4,7 +4,7 @@ module.exports = {
     applyStrategy: applyLevelFour
 };
 
-function upgradeToLevelFour(spawn) {
+function upgradeToLevelFour(spawn, stratergy) {
     var roads = [];
     
     //console.log('Upgrade');
@@ -46,14 +46,15 @@ function upgradeToLevelFour(spawn) {
         return x[0]+':'+x[1];
     });
 
-    Memory.stratergy.roads = roads;
-    Memory.stratergy.level = 4;
+    spawn.room.memory.roads4 = roads;
+    stratergy.level = 4;
 }
 
 function applyLevelFour(spawn, intel, army) {
 
-    if(Memory.stratergy.level < 4) upgradeToLevelFour(spawn);
+    if(!stratergy.level || stratergy.level < 4) upgradeToLevelFour(spawn, stratergy);
     
+
     var stats = {};
     var workerId=1;
     var maintainerId=1;
@@ -72,7 +73,7 @@ function applyLevelFour(spawn, intel, army) {
         for(var i=0; i<2; i++) { 
             army.push({chassis: chassis.staticWorker(6, false), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
         }
-        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker2'});
+        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'harvest', source: "F", destination: "Sr"} }); 
         heavyTransportId++;//army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'park'});
         
         for(var i=0; i<2; i++) {
@@ -86,11 +87,11 @@ function applyLevelFour(spawn, intel, army) {
         }
         
         army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
-        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "S:Spawn1"} });
+        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "Sr"} });
         
         for(var i=0; i<1; i++) {
             var pumperName = 'Pumper'+(pumperId++);
-            army.push({chassis: chassis.staticWorker(8, true), name: pumperName, role: 'pumper.static'});
+            army.push({chassis: chassis.staticWorker(8, true), name: pumperName, role: 'pumper.immobile'});
             army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Z", destination: "R:"+pumperName} }); 
             army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Z", destination: "R:"+pumperName} });
             army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'pump', source: "Z", destination: "R:"+pumperName} });
