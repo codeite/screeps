@@ -3,7 +3,7 @@ module.exports = function (creep, intel) {
     var res = 0;
     //return;
     var config = creep.memory.config || {};
-    var source = Game.spawns.Spawn1;
+    var source = creep.room.rootSpawn;
    
     var dindex = ~~creep.memory.dindex;
     

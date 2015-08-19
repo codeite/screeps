@@ -72,7 +72,7 @@ function applyLevelFour(spawn, intel, army) {
         for(var i=0; i<2; i++) { 
             army.push({chassis: chassis.staticWorker(6, false), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
         }
-        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker2'});
+        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'harvest', source: "F", destination: "Sr"} }); 
         heavyTransportId++;//army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'park'});
         
         for(var i=0; i<2; i++) {
@@ -86,7 +86,7 @@ function applyLevelFour(spawn, intel, army) {
         }
         
         army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
-        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "S:Spawn1"} });
+        army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "Sr"} });
         
         for(var i=0; i<1; i++) {
             var pumperName = 'Pumper'+(pumperId++);

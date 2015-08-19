@@ -10,8 +10,8 @@ module.exports = function (creep) {
     
     //console.log('tanker4:', config.industry, Memory.stratergy.pump)
     if(config.industry == 'pump' && Memory.stratergy.pump === false) {
-        creep.moveTo(Game.spawns.Spawn1);
-        creep.transferEnergy(Game.spawns.Spawn1);
+        creep.moveTo(creep.room.rootSpawn);
+        creep.transferEnergy(creep.room.rootSpawn);
         //creep.say('pump - off');
         return;
     }

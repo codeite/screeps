@@ -1,7 +1,6 @@
 module.exports = {
     buildMobile: buildMobile,
-    buildStatic: buildStatic,
-    build2: build2
+    buildStatic: buildStatic
 }
 
 function buildMobile(creep) {
@@ -42,8 +41,12 @@ function buildMobile(creep) {
             }
         }
 
+        if(!energySource && creep.room.rootSpawn) {
+            energySource = creep.room.rootSpawn;
+        }
+
         if(!energySource) {
-            energySource = Game.spawns.Spawn1;
+            creep.say('To Src!');
         }
         
         if(!creep.pos.isNearTo(energySource)) {
@@ -80,7 +83,6 @@ function buildMobile(creep) {
     		}
         }
 
-    		
 		if(target){
 		    if(!creep.pos.isNearTo(target)) {
 			    creep.moveTo(target);
@@ -114,20 +116,6 @@ function buildMobile(creep) {
         
 	}
 
-}
-
-function build2(creep) {
-    if(creep.carry.energy == 0) {
-		creep.moveTo(Game.spawns.Spawn1);
-		Game.spawns.Spawn1.transferEnergy(creep);
-	}
-	else {
-		var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-		if(targets.length) {
-			creep.moveTo(targets[0]);
-			creep.build(targets[0]);
-		}
-	}
 }
 
 function buildStatic(creep) {
