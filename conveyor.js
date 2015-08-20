@@ -8,7 +8,7 @@ Creep.prototype.conveyor = function(intel) {
     if(!(this.pos.x == this.config.pos.x && this.pos.y ==this.config.pos.y)){
         //console.log(this, 'Moving into pos!');
         this.say('M');
-        var res = this.moveTo(this.config.pos);
+        var res = this.moveTo(this.config.pos.x, this.config.pos.y );
       
         if(res == ERR_NO_PATH) {
 	        var targets = creep.pos.findInRange(FIND_MY_CREEPS, 1);

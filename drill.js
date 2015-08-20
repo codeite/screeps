@@ -8,8 +8,8 @@ function drill() {
     
     if(this.config.pos) {
         if(!(this.pos.x == this.config.pos.x && this.pos.y ==this.config.pos.y)){
-            console.log(this, 'Moving into pos!');
-            this.moveTo(this.config.pos);
+            //console.log(this, 'Moving into pos!', this.pos.x , this.config.pos.x , this.pos.y ,this.config.pos.y);
+            this.moveTo(this.config.pos.x, this.config.pos.y);
             return;
         } 
     }
@@ -19,7 +19,7 @@ function drill() {
     if(config.sourceId) {
         source = Game.getObjectById(config.sourceId);
     } else {
-	    source = this.room.find(FIND_SOURCES)[0];
+	    source = this.pos.findClosest(FIND_SOURCES);
     }
     
     var dx = Math.abs(source.pos.x - this.pos.x);

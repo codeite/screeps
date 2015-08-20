@@ -4,8 +4,7 @@ module.exports = function (creep) {
 	    var source;
       var pos = creep.config.pos;
       if(pos) {
-        if(pos.x != creep.x || pos.y != creep.y ) {
-
+        if(pos.x !== creep.pos.x || pos.y !== creep.pos.y ) {
           creep.moveTo(pos.x, pos.y);
           return;
         } else {

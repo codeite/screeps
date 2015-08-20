@@ -2,6 +2,7 @@ initMemory();
 //console.log('Tick:', Game.time);
 require('registry');
 require('betterCreep');
+require('caching');
 require('locators');
 
 require('conveyor');
@@ -30,7 +31,8 @@ var strategy = require('strategy');
 
 for(var spawnName in Game.spawns) {
   var spawn = Game.spawns[spawnName];
-  spawn.room.intel = collectIntel(spawn);
+  var intel = collectIntel(spawn);
+  spawn.room.intel = intel;
   strategy(spawn, spawn.room.intel);
 }
 
@@ -134,6 +136,8 @@ function initMemory() {
       if(!roomMem.strategy) roomMem.strategy = { level: [], pump: true, build: true };
       if(!roomMem.repairJobs) roomMem.repairJobs = {};
       if(!roomMem.intel) roomMem.intel = {};
+      if(!roomMem.routes) roomMem.routes = {};
+      if(!roomMem.infrastructure) roomMem.infrastructure = {};
 
       roomMem.stats.pumped = 0;
     })

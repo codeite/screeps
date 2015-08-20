@@ -10,12 +10,13 @@ module.exports = function collectIntel(spawn) {
     
     var pos = spawn.pos;
     var intel = room.memory.intel || {
-        controllerLevel: room.controller.level,
-        progressLevel: room.controller.level,
-        totalEnergy: spawn.energy,
-        maxEnergy: spawn.energyCapacity,
         structures: 0
     };
+
+    intel.controllerLevel = room.controller.level;
+    intel.progressLevel = room.controller.level;
+    intel.totalEnergy =  spawn.energy;
+    intel.maxEnergy = spawn.energyCapacity;
 
     // console.log(intel.energySites.map(function(s){ return s.x+','+s.y+'; ';}));
 
@@ -95,12 +96,16 @@ module.exports = function collectIntel(spawn) {
     
     if(!intel.importantPlaces) intel.importantPlaces = {};
     
+    if(!intel.importantPlaces.drillSpots) {
+            intel.importantPlaces.drillSpots = findDrillSpots(spawn);
+        }
+
     if(room.storage){
         if(!intel.importantPlaces.storageAndTx || (Game.time % 600) === 0) {
             intel.importantPlaces.storageAndTx = spawn.findPosNextTo('Z', 'L:nearestTo:Z');
         }
     
-        if(!intel.importantPlaces.sourceAndStorage || (Game.time % 2) === 1) {
+        if(!intel.importantPlaces.sourceAndStorage || (Game.time % 600) === 1) {
             intel.importantPlaces.sourceAndStorage = spawn.findPosNextTo('E', 'Z');
         }
     }
@@ -117,4 +122,53 @@ module.exports = function collectIntel(spawn) {
 function cleanLook(look) {
     look = _.map(look, function(x){return _.map(x, function(y){if(typeof y === 'object'){return y[0]}else{return undefined};});});
     return _.flatten(look);
+}
+
+function findDrillSpots(spawn) {
+    var sources = [];
+    var usedSources = [];
+    var source;
+    var limit = 10;
+
+    do {
+        var source = spawn.pos.findClosestByRange(FIND_SOURCES, {
+            filter: function(source) {
+                return usedSources.indexOf(source) == -1;
+            }
+        });
+        console.log('source', source);
+
+
+        if(source) {
+            var sites = [];
+            usedSources.push(source)
+
+            var possiblePositions = source.pos.getAdjacentPositions();
+            possiblePositions = _.filter(possiblePositions, function(pos) {
+                var found = pos.lookFor('terrain');
+                return found[0] !== 'wall';
+            });
+            //console.log('possiblePositions', possiblePositions);
+
+            while(possiblePositions.length) {
+                var closest = spawn.pos.closestOf(possiblePositions);
+                possiblePositions.splice(possiblePositions.indexOf(closest), 1);
+                sites.push({
+                    x: closest.x,
+                    y: closest.y
+                });
+            }
+            sources.push({
+                source: {
+                    x: source.pos.x, 
+                    y: source.pos.y, 
+                    id: source.id
+                },
+                sites: sites
+            })
+        }
+
+    } while(source && limit-- > 0);
+
+    return sources;
 }

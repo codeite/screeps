@@ -1,13 +1,21 @@
 module.exports = {
     
-    tick : function (spawn) {
+    tick : function (spawn, intel) {
         
         if(Game.time % 3 === 0) {
+
+            if(Game.time % 300 === 0 ) {
+              for(var i=2; i<=intel.controllerLevel; i++)
+                require('strategy.level'+i).applyInfrastructure(spawn);
+            }
+
             var roads = [];
             if(spawn.room.memory.roads3) roads = roads.concat(spawn.room.memory.roads3);
             if(spawn.room.memory.roads4) roads = roads.concat(spawn.room.memory.roads4);
             if(spawn.room.memory.roads5) roads = roads.concat(spawn.room.memory.roads5);
-            
+            if(spawn.room.memory.roads6) roads = roads.concat(spawn.room.memory.roads6);
+            //console.log(spawn, roads);
+
             var totalHits = 0;
             var roadCount = 0
             var expectedRoads = roads.length;
@@ -26,7 +34,7 @@ module.exports = {
                    totalHits += (road.hits / road.hitsMax);
                    
                    if(road.hits < ((road.hitsMax/3)*2) ) {
-                       Memory.repairJobs[xy[0]+':'+xy[1]] = {x:xy[0], y:xy[1], t:'road', hits: road.hits};
+                       spawn.room.memory.repairJobs[xy[0]+':'+xy[1]] = {x:xy[0], y:xy[1], t:'road', hits: road.hits};
                    }
                } else {
                    spawn.room.createConstructionSite(xy[0], xy[1], STRUCTURE_ROAD);

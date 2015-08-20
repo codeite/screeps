@@ -1,10 +1,11 @@
 var chassis = require('chassis');
 
 module.exports = {
-    applyStrategy: applyLevelFour
+    applyStrategy: applyLevelFour,
+    applyInfrastructure: upgradeToLevelFour
 };
 
-function upgradeToLevelFour(spawn, stratergy) {
+function upgradeToLevelFour(spawn) {
     var roads = [];
     
     //console.log('Upgrade');
@@ -47,7 +48,6 @@ function upgradeToLevelFour(spawn, stratergy) {
     });
 
     spawn.room.memory.roads4 = roads;
-    stratergy.level = 4;
 }
 
 function applyLevelFour(spawn, intel, army) {

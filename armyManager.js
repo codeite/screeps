@@ -65,11 +65,12 @@ function maintainArmy(spawn, army, intel) {
 
     for(var i=0; i<army.length; i++) {
         var blueprint = army[i];
-        var res = createChassis(spawn, energy, blueprint.chassis, blueprint.name, blueprint.role, blueprint.config);
+        var res = createChassis(spawn, energy, blueprint.chassis, spawn.room.name+'-'+blueprint.name, blueprint.role, blueprint.config);
         energy -= res.energyUsed;
         inService += res.existing;
         energyNeeded += res.energyNeeded;
         armyCost += blueprint.chassis.cost;
+        blueprint.pos = res.creep && res.creep.pos;
 
         if(!missing && res.existing === 0 && res.energyUsed === 0) {
             missing = army[i];

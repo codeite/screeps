@@ -6,7 +6,15 @@ module.exports = {
 function buildMobile(creep) {
 
     if(creep.carry.energy == 0) {
-        if(Memory.stratergy.preventBuild) return;
+        //var inSitue = creep.pos.lookFor('energy');
+        //if(inSitue.length) {
+        //    creep.pickup(inSitue[0]);
+        //}
+
+        if(creep.room.memory.strategy.preventBuild) {
+            creep.say('No B!');
+            return;
+        }
         var energySource = null;
         
         if(creep.memory.sourceId) {
@@ -46,10 +54,11 @@ function buildMobile(creep) {
         }
 
         if(!energySource) {
-            creep.say('To Src!');
+            creep.say('No Src!');
         }
-        
+
         if(!creep.pos.isNearTo(energySource)) {
+
 		    creep.moveTo(energySource);
         } else {
 		    energySource.transferEnergy(creep);
@@ -83,8 +92,11 @@ function buildMobile(creep) {
     		}
         }
 
+
+
 		if(target){
 		    if(!creep.pos.isNearTo(target)) {
+                creep.say('Mv');
 			    creep.moveTo(target);
 		    } else {
 		        if(target instanceof ConstructionSite) {
@@ -96,8 +108,8 @@ function buildMobile(creep) {
 		            }
 		        }
 		    }
-		} else if(Object.keys(Memory.repairJobs).length) {
-		    var mostUrgentJob = _.min(Memory.repairJobs, function(job) {
+		} else if(!creep.config.dontRepair &&  Object.keys(creep.room.memory.repairJobs).length) {
+		    var mostUrgentJob = _.min(creep.room.memory.repairJobs, function(job) {
                 return job.hits;
             });
             
@@ -106,12 +118,14 @@ function buildMobile(creep) {
             if(struct.length) {
                 console.log('Taking on repair job at',mostUrgentJob.x, mostUrgentJob.y, mostUrgentJob.hits)
                 creep.memory.targetId = struct[0].id;
-                delete Memory.repairJobs[mostUrgentJob.x+':'+mostUrgentJob.y]
+                delete creep.room.memory.repairJobs[mostUrgentJob.x+':'+mostUrgentJob.y]
             }
             
 		 
-		} else if(Game.flags.Park) {
-
+		} else if(Game.flags[creep.room.name+'-Park']) {
+            creep.moveTo(Game.flags[creep.room.name+'-Park']);
+        }   
+        else if(Game.flags.Park) {
 		    creep.moveTo(Game.flags.Park);
 		} else {
             creep.say('Nothing td!');

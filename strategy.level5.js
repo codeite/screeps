@@ -1,13 +1,13 @@
 var chassis = require('chassis');
 
 module.exports = {
-    applyStrategy: applyLevelFive
+    applyStrategy: applyLevelFive,
+    applyInfrastructure: upgradeToLevelFive
 };
 
 
 function upgradeToLevelFive(spawn) {
-    console.log('Upgrade to 5!');
-    return;
+    
     
     var roads = [];
     
@@ -21,8 +21,7 @@ function upgradeToLevelFive(spawn) {
         spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+7, STRUCTURE_EXTENSION);
     }
     
-    spawn.room.memory.roads4 = roads;
-    Memory.stratergy.level[spawn.name] = 5;
+    spawn.room.memory.roads5 = roads;
 }
 
 function applyLevelFive(spawn, intel, army) {
@@ -37,7 +36,7 @@ function applyLevelFive(spawn, intel, army) {
     var heavyTransportId = 1;
     var pumperId = 1;
     
-    army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+i, role: 'harvester', config: {industry: 'energy'}});
+    //army.push({chassis: chassis.basicWorker, name: 'BasicWorker'+i, role: 'harvester', config: {industry: 'energy'}});
     
     army.push({chassis: chassis.transporter(4), name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "Sr"} });
     army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
@@ -48,13 +47,13 @@ function applyLevelFive(spawn, intel, army) {
         if(intel.importantPlaces.sourceAndStorage && intel.importantPlaces.sourceAndStorage.length) {
             for(var i=0; i<intel.importantPlaces.sourceAndStorage.length; i++){
                 var pos = intel.importantPlaces.sourceAndStorage[i];
-                army.push({chassis: chassis.staticWorker(1, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill', config:{pos: pos}});
+                army.push({chassis: chassis.staticWorker(6, true), name: 'HeavyDrill'+(heavyWorkerId++), role: 'drill', config:{pos: pos}});
             }
             army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
         } else {
-            army.push({chassis: chassis.staticWorker(3, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
+            army.push({chassis: chassis.staticWorker(3, true), name: 'HeavyDriller'+(heavyWorkerId++), role: 'drill'});
             army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
-            army.push({chassis: chassis.staticWorker(3, true), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill'});
+            army.push({chassis: chassis.staticWorker(3, true), name: 'HeavyDriller'+(heavyWorkerId++), role: 'drill'});
         }
         
     
@@ -63,7 +62,7 @@ function applyLevelFive(spawn, intel, army) {
         //army.push({chassis: chassis.ram, name: 'ram', role: 'melee', config: {industry: 'military', flag: "AttackFlag1", roomName:"W9N8"} });
         
         
-        if(intel.importantPlaces.controllerAndRx) {
+        if(intel.importantPlaces.controllerAndRx ) {
             var positions= intel.importantPlaces.controllerAndRx;
             for(var i=0; i<positions.length && i<1; i++) {
                 var pumperName = 'Pumper'+(pumperId++);

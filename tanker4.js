@@ -1,5 +1,5 @@
 
-module.exports = function (creep) {
+module.exports = function (creep, intel) {
     //creep.say('E'+creep.carry.energy);
     var res = 0;
 
@@ -66,10 +66,12 @@ module.exports = function (creep) {
     }
     
     if(creep.memory.mode === 'U') {
+        console.log(creep, 'destination:', destination);
         if(destination) {
            
             if(creep.pos.isNearTo(destination)) {
-                
+                creep.memory._route = null;
+
                 res = creep.transferEnergy(destination);
                 
                 if(res == ERR_FULL) {
@@ -79,8 +81,43 @@ module.exports = function (creep) {
                     //console.log('creep.memory.dindex2', creep.memory.dindex);
                 }
             } else {
-                creep.moveTo(destination.pos);
-                res = 't';
+                if(creep.config.routeU) {
+                    if(!creep.memory._route) {
+                        creep.memory._route = creep.room.getRoute(creep.config.routeU);
+                    }
+
+                    if(creep.memory._route) {
+                        var route = creep.memory._route;
+                        if(!creep.memory._routeStarted) {
+                            creep.moveTo(route[0].x, route[0].y);
+                            if(creep.pos.x == route[0].x && creep.pos.y == route[0].y) {
+                                creep.memory._routeStarted = true;
+                            }
+                        } else {
+                            if(route.length > 3) {
+                                var res = creep.moveByPath(route);
+                                if(res === OK && !(route[0].x === creep.pos.x && route[0].y === creep.pos.y) ) {
+                                    route.shift();
+                                }
+
+                                if(res === ERR_NOT_FOUND) {
+                                    creep.memory._route = [];
+                                }
+
+                                console.log(creep, route.length, res);
+                            } else {
+                                creep.moveTo(destination.pos);
+                            }
+                        }
+                    } else {
+                        creep.moveTo(destination.pos);
+                        res = 't';
+                    }
+                } else {
+
+                    creep.moveTo(destination.pos);
+                    res = 't';
+                }
             }
         } else {
             res = 'l';

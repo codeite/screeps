@@ -27,9 +27,9 @@ function getTarget(descriptor, memory) {
     //console.log('this', this);
     var bits = descriptor.split(':', 3);
     if(bits[0] == 'C') {
-        return Game.creeps[bits[1]];
+        return Game.creeps[room.name+'-'+bits[1]];
     } else if(bits[0] == 'R') {
-        var creep = Game.registry.getCreep(bits[1]);
+        var creep = Game.registry.getCreep(room.name+'-'+bits[1]);
         return creep;
     } else if(bits[0] == 'Ct') {
        return room.controller;
@@ -146,5 +146,32 @@ RoomPosition.prototype.closestOf = function(positions) {
     return closest;
 };
 
+Room.prototype.getRoute = function(routeName) {
 
+    if(this.memory.routes[routeName]) return this.memory.routes[routeName];
 
+    var route = [];
+
+    var start = Game.flags[routeName+'-a'];
+    var nextStep = Game.flags[routeName+'-b'];
+
+    console.log('start, nextStep', start, nextStep);
+    if(!start || !nextStep ) return [];
+
+    var index = 'c';
+    while(nextStep) {
+        var routeSection = this.findPath(start.pos, nextStep.pos, {
+            ignoreCreeps: true
+        });
+
+        route = route.concat(routeSection);
+        console.log('route.length', route.length);
+        start = nextStep;
+        nextStep =  Game.flags[routeName+'-'+index];
+        index++;
+        console.log('index', index);
+    }
+
+    this.memory.routes[routeName] = route;
+    return route;
+}

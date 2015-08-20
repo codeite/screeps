@@ -17,7 +17,10 @@ module.exports = function (creep) {
     if(creep.carry.energy > 0){
 	    creep.moveTo(creep.room.rootSpawn);
 		creep.transferEnergy(creep.room.rootSpawn)
+    } else if(Game.flags[creep.room.name+'-Park']) {
+		creep.moveTo(Game.flags[creep.room.name+'-Park']);    
     } else if(Game.flags.Park) {
-		creep.moveTo(Game.flags.Park);    
+        creep.moveTo(Game.flags.Park);    
     }
+
 }

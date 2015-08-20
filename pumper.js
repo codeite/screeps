@@ -36,7 +36,7 @@ function immobile (creep) {
             
 	        var res = creep.upgradeController(creep.room.controller);
 	        if(res === OK){
-	            Memory.stats.pumped += workRate(creep);
+	            creep.room.memory.stats.pumped += workRate(creep);
 	        }
         }
     } else {
