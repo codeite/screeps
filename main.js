@@ -125,6 +125,7 @@ function doCreep(creep) {
 
 function initMemory() {
     if(!Memory.idCache) Memory.idCache = {};
+    if(!Memory.cache) Memory.cache = {};
     if(!Memory.memorization) Memory.memorization = {};
 
     var roomNames = Object.keys(Game.rooms);

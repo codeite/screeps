@@ -1,0 +1,26 @@
+{
+  "name": "ScreepsEvilAi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/**/*.tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codeite/screeps.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codeite/screeps/issues"
+  },
+  "homepage": "https://github.com/codeite/screeps",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "lodash": "^3.10.1"
+  }
+}
