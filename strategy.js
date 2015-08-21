@@ -2,8 +2,8 @@
 var chassis = require('chassis');
 var armyManager = require('armyManager');
 
-var applyInvasion = require('stratergy.invasion');
-var stratergyMaintanance = require('stratergy.maintanance');
+var applyInvasion = require('strategy.invasion');
+var stratergyMaintanance = require('strategy.maintanance');
 
 module.exports = function(spawn, intel) {
     var army = [];

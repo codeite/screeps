@@ -100,6 +100,12 @@ function findPosNextTo(idA, idB) {
         //console.log('pos:', pos, found);
         return found[0] == 'plain';
     });
+
+    validPositions = validPositions.map(function(vp){
+        vp.sourceId = a.id;
+        vp.destId = b.id;
+        return vp;
+    })
     
     //return _.map(validPositions, function(n) {return n.x+':'+n.y});
     return validPositions;

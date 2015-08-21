@@ -5,26 +5,21 @@ require('betterCreep');
 require('caching');
 require('locators');
 
-require('conveyor');
+require('role.conveyor');
 require('role.flagPlanter');
 require('role.melee');
 require('role.transitPoint');
 require('role.drill');
 require('role.builder');
+require('role.harvester');
+require('role.maintainer');
+require('role.park');
+require('role.tanker');
+require('role.explorer');
 
-var harvester = require('harvester');
-var builder = require('builder');
-var tanker = require('tanker');
-
-var tanker3 = require('tanker3');
-var maintainer = require('maintainer');
-var tanker4 = require('tanker4');
-
-var forklift = require('forklift');
 var pumper = require('pumper');
-var explorer = require('explorer');
 
-var collectIntel = require('collectIntel');
+var collectIntel = require('intel.collect');
 
 //require('spawnList');
 
@@ -51,6 +46,8 @@ for(var name in Game.creeps) {
     }
 }
 
+cleanMemory();
+
 function doCreep(creep) {
     
     if(creep.memory.roleOverride) {
@@ -68,25 +65,7 @@ function doCreep(creep) {
         return creep[creep.role](creep.room.intel);
     }
     
-    if(creep.memory.role == 'harvester') {
-        return harvester(creep, intel);
-    }
-  
-    if(creep.memory.role == 'tanker') {
-        return tanker(creep);
-    }
-    
-    if(creep.memory.role == 'tanker3') {
-        return tanker3(creep);
-    }
-    
-    if(creep.memory.role == 'tanker4') {
-        return tanker4(creep);
-    }  
-    
-    if(creep.memory.role == 'forklift') {
-        return forklift(creep);
-    }
+
     
     if(creep.memory.role == 'pumper' || creep.memory.role == 'pumper.immobile') {
         return pumper.immobile(creep);
@@ -96,14 +75,24 @@ function doCreep(creep) {
         return pumper.mobile(creep);
     }
     
-    if(creep.memory.role == 'roadBuilder')   return require('roadBuilder')(creep);
-    if(creep.memory.role == 'park')   return require('park')(creep);
-    
-    if(creep.memory.role == 'maintainer')   return require('maintainer')(creep, creep.room.intel);
-    
-    if(creep.memory.role == 'explorer') return explorer(creep, creep.room.intel);
 
     console.log('*****', creep, 'Unknown role:', creep.memory.role);
+}
+
+function cleanMemory() {
+    if(Game.time % 60 === 0) {
+        for(var creepName in Memory.creeps) {
+            if(!Game.creeps[creepName]) delete Memory.creeps[creepName];
+        }
+
+        for(var creepTitle in Memory.registry) {
+            var creepName = Memory.registry[creepTitle];
+            if(!Game.creeps[creepName]) {
+                //console.log('Would delete', creepTitle)
+                delete Memory.registry[creepTitle];
+            } 
+        }
+    }
 }
 
 function initMemory() {
@@ -124,7 +113,7 @@ function initMemory() {
         if(!roomMem.infrastructure) roomMem.infrastructure = {};
 
         roomMem.stats.pumped = 0;
-    })
+    });
 }
 
 for(var spawnName in Game.spawns) {

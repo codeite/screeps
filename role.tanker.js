@@ -1,5 +1,10 @@
+module.exports = tanker;
 
-module.exports = function (creep, intel) {
+Creep.prototype.tanker = tanker;
+Creep.prototype.tanker4 = tanker;
+
+function tanker (intel) {
+    var creep = this;
     //creep.say('E'+creep.carry.energy);
     var res = 0;
 
@@ -123,10 +128,10 @@ module.exports = function (creep, intel) {
             res = 'l';
             creep.say('No Tgt!');
         }
-	}
+    }
 
     //creep.say(creep.memory.mode );
-	
-	//console.log(creep.pos, destination.pos);
-	//console.log(creep.memory.dindex+'E'+ creep.carry.energy + 'R'+res+'M'+creep.memory.mode);
+    
+    //console.log(creep.pos, destination.pos);
+    //console.log(creep.memory.dindex+'E'+ creep.carry.energy + 'R'+res+'M'+creep.memory.mode);
 }

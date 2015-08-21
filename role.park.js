@@ -1,5 +1,9 @@
-module.exports = function (creep) {
+module.exports = park;
 
+Creep.prototype.park = park;
+
+function park (intel) {
+    var creep = this;
 
     if(!creep.config.flag) {
         creep.config.flag = 'Park';
