@@ -3,6 +3,11 @@ module.exports = function (creep, intel) {
     var res = 0;
     //return;
     var source = creep.room.rootSpawn;
+
+    if(creep.room.storage && source.energy === 0) {
+        source = creep.room.storage;
+    }
+
    
     var dindex = ~~creep.memory.dindex;
     

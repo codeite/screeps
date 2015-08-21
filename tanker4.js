@@ -40,7 +40,7 @@ module.exports = function (creep, intel) {
     }
     
     if(creep.memory.mode === 'L') {
-        creep.moveTo(source);
+        creep.moveTo(source, {reusePath: 20});
         if(source && source.transferEnergy) res = source.transferEnergy(creep);
         if(source instanceof Energy) {
             res = creep.pickup(source);
@@ -66,7 +66,7 @@ module.exports = function (creep, intel) {
     }
     
     if(creep.memory.mode === 'U') {
-        console.log(creep, 'destination:', destination);
+        //console.log(creep, 'destination:', destination);
         if(destination) {
            
             if(creep.pos.isNearTo(destination)) {
@@ -110,12 +110,12 @@ module.exports = function (creep, intel) {
                             }
                         }
                     } else {
-                        creep.moveTo(destination.pos);
+                        creep.moveTo(destination.pos, {reusePath: 20});
                         res = 't';
                     }
                 } else {
 
-                    creep.moveTo(destination.pos);
+                    creep.moveTo(destination.pos, {reusePath: 20});
                     res = 't';
                 }
             }
@@ -124,6 +124,8 @@ module.exports = function (creep, intel) {
             creep.say('No Tgt!');
         }
 	}
+
+    //creep.say(creep.memory.mode );
 	
 	//console.log(creep.pos, destination.pos);
 	//console.log(creep.memory.dindex+'E'+ creep.carry.energy + 'R'+res+'M'+creep.memory.mode);

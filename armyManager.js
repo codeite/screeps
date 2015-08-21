@@ -67,6 +67,7 @@ function maintainArmy(spawn, army, intel) {
         var blueprint = army[i];
         var res = createChassis(spawn, energy, blueprint.chassis, spawn.room.name+'-'+blueprint.name, blueprint.role, blueprint.config);
         energy -= res.energyUsed;
+        energy -= res.energyNeeded;
         inService += res.existing;
         energyNeeded += res.energyNeeded;
         armyCost += blueprint.chassis.cost;

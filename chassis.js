@@ -14,6 +14,7 @@ module.exports = {
     heavyWorker: {name: 'heavyWorker', parts: [MOVE, CARRY, CARRY, WORK, WORK, WORK, WORK], cost: 550},
     lightTransport: {name: 'lightTransport', parts: [MOVE, MOVE, CARRY, CARRY], cost: 300},
     heavyTransport: {name: 'heavyTransport', parts: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], cost: 550},
+    transitPoint: {name: 'transitPoint', parts: [MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], cost: 600},
 
     costOf: costOf,
     costOfCassis: costOfCassis,

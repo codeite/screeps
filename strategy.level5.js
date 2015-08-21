@@ -26,7 +26,10 @@ function upgradeToLevelFive(spawn) {
 
 function applyLevelFive(spawn, intel, army) {
 
-    if(Memory.stratergy.level[spawn.name] < 5) upgradeToLevelFive(spawn);
+    if(intel.extensions.length + intel.extensionSites.length < 30)
+    {
+        upgradeToLevelFive(spawn);
+    }
     
     var stats = {};
     var workerId=1;
@@ -40,8 +43,8 @@ function applyLevelFive(spawn, intel, army) {
     
     army.push({chassis: chassis.transporter(4), name: 'lightTransport'+(lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "Z", destination: "Sr"} });
     army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
-        
-    if(false) {
+    
+    if(intel.links.length < 2) {
        buildLinks(spawn, intel, army);
     } else {
         if(intel.importantPlaces.sourceAndStorage && intel.importantPlaces.sourceAndStorage.length) {
@@ -61,15 +64,16 @@ function applyLevelFive(spawn, intel, army) {
             
         //army.push({chassis: chassis.ram, name: 'ram', role: 'melee', config: {industry: 'military', flag: "AttackFlag1", roomName:"W9N8"} });
         
-        
-        if(intel.importantPlaces.controllerAndRx ) {
-            var positions= intel.importantPlaces.controllerAndRx;
-            for(var i=0; i<positions.length && i<1; i++) {
-                var pumperName = 'Pumper'+(pumperId++);
-                if(Game.spawns.Spawn2)
-                    army.push({chassis: chassis.largestWorker(intel.maxEnergy), name: pumperName, role: 'pumper.immobile', config:{pos: positions[i]}});
-            }
-        } 
+        if(spawn.room.memory.strategy.buildPumpCreeps) {
+            if(intel.importantPlaces.controllerAndRx ) {
+                var positions= intel.importantPlaces.controllerAndRx;
+                for(var i=0; i<positions.length && i<1; i++) {
+                    var pumperName = 'Pumper'+(pumperId++);
+                    if(Game.spawns.Spawn2)
+                        army.push({chassis: chassis.largestWorker(intel.maxEnergy), name: pumperName, role: 'pumper.immobile', config:{pos: positions[i]}});
+                }
+            } 
+        }
         army.push({chassis: chassis.agileWorker, name: 'Builder1', role: 'builder', config: {industry: 'construction', useClosestEnergy: true, maxAge: 0}});
         if(Memory.repairJobs > 10 || intel.constructionSites.length > 0) {
             army.push({chassis: chassis.agileWorker, name: 'Builder2', role: 'builder', config: {industry: 'construction', useClosestEnergy: true, maxAge: 0}});
@@ -100,7 +104,7 @@ function buildLinks(spawn, intel, army) {
     
     for(var i=0; i<1; i++) {
         var builderName = 'HeavyWorker'+(heavyWorkerId++);
-        army.push({chassis: chassis.heavyWorker, name: builderName, role: 'builder.static'});
+        army.push({chassis: chassis.heavyWorker, name: builderName, role: 'staticBuilder'});
         army.push({chassis: chassis.heavyTransport, name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'build', source: "Z", destination: "R:"+builderName} });
     }
 }

@@ -83,6 +83,8 @@ module.exports = function collectIntel(spawn) {
         intel.totalEnergy += v.energy;
         intel.maxEnergy += v.energyCapacity;
     });
+
+    intel.links = _.filter(allStructures, function(x) { return x.structureType === STRUCTURE_LINK;});
         
     intel.reserves = intel.totalEnergy / intel.maxEnergy;
     
@@ -155,7 +157,8 @@ function findDrillSpots(spawn) {
                 possiblePositions.splice(possiblePositions.indexOf(closest), 1);
                 sites.push({
                     x: closest.x,
-                    y: closest.y
+                    y: closest.y,
+                    sourceId: source.id
                 });
             }
             sources.push({

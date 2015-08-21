@@ -20,7 +20,7 @@ Room.prototype.findPathCached = function(startPos, endPos, options) {
         endPosCannon = endPos.toCanonString();
     } else return ERR_INVALID_ARGS;
 */
-    var path = this.findPathStatic(startPos, endPos, options);
+    var path = this.findPath(startPos, endPos, options);
 
     return path;
 }

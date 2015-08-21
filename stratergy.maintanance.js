@@ -40,10 +40,11 @@ module.exports = {
                    spawn.room.createConstructionSite(xy[0], xy[1], STRUCTURE_ROAD);
                }
             });
-            
+            var averageCondition = totalHits/roadCount;
+            spawn.room.memory.stats.averageCondition = averageCondition
             spawn.room.memory.stats.roads = 
               'There are '+roadCount+' out of '+expectedRoads+'. '+
-              'Their average condition is '+(~~(100*totalHits/roadCount))+'%. '+
+              'Their average condition is '+(~~(100*averageCondition))+'%. '+
               'Open repair jobs: '+( Object.keys(spawn.room.memory.repairJobs).length);
         }
     }

@@ -1,6 +1,10 @@
-module.exports = function (creep) {
+module.exports = function (creep, intel) {
 
 	if(creep.carry.energy < creep.carryCapacity) {
+      var e = creep.pos.lookFor('energy');
+      if(e.length)  creep.pickup(e[0]);
+            
+
 	    var source;
       var pos = creep.config.pos;
       if(pos) {
@@ -42,7 +46,7 @@ module.exports = function (creep) {
 
       var target;
 
-      if(creep.room.storage) {
+      if(creep.room.storage && intel.reserves > 0.99) {
         target = creep.room.storage;
       } else {
         target = creep.room.rootSpawn;

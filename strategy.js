@@ -50,8 +50,13 @@ module.exports = function(spawn, intel) {
         }
     }
     
-   
     if(spawn.room.storage && spawn.room.storage.store.energy < 10000) {
+        strategy.buildPumpCreeps = false;
+    } else {
+        strategy.buildPumpCreeps = true;
+    }
+
+    if(spawn.room.storage && spawn.room.storage.store.energy < 5000) {
         strategy.pump = false;
     } else {
         strategy.pump = true;
