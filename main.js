@@ -23,7 +23,6 @@ var pumper = require('pumper');
 var collectIntel = require('intel.collect');
 
 //require('spawnList');
-
 var strategy = require('strategy');
 var invasion = require('strategy.invasion');
   

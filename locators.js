@@ -1,6 +1,7 @@
 Creep.prototype.getTarget = getTarget;
 RoomPosition.prototype.getTarget = getTarget;
 Spawn.prototype.getTarget = getTarget;
+Room.prototype.getTarget = getTarget;
 
 Creep.prototype.findPosNextTo = findPosNextTo;
 RoomPosition.prototype.findPosNextTo = findPosNextTo;
@@ -20,6 +21,10 @@ function getTarget(descriptor, memory) {
         room = this.room;
         pos = this.pos;
         memory = this.memory;
+    } else if(this instanceof Room) {
+        room = this;
+        pos = this.getPositionAt(25, 25);
+        memory = this.memory;
     } else {
         throw "Called getTarget on " + typeof(this);
     }
@@ -31,6 +36,18 @@ function getTarget(descriptor, memory) {
     } else if(bits[0] == 'R') {
         var creep = Game.registry.getCreep(room.name+'-'+bits[1]);
         return creep;
+    } else if(bits[0] == 'Pc') {
+        var rp = room.getPositionAt(bits[1], bits[2]);
+        var found = room.lookForAt('creep', rp );
+        console.log(room, 'Loooking for creep at:', bits[1], bits[2], 'found:', JSON.stringify(found));
+        return found.length?found[0]:null;
+    } else if(bits[0] == 'FC') {
+        var rp = room.getPositionAt(bits[1], bits[2]);
+        var foundE = room.lookForAt('energy', rp );
+        if(foundE.length) return foundE[0];
+        var foundC = room.lookForAt('creep', rp );
+        //console.log(room, 'Loooking for creep at:', bits[1], bits[2], 'found:', JSON.stringify(foundC));
+        return foundC.length?foundC[0]:null;
     } else if(bits[0] == 'Ct') {
        return room.controller;
     } else if(bits[0] == 'S') {
@@ -38,8 +55,8 @@ function getTarget(descriptor, memory) {
     } else if(bits[0] == 'Sr') {
         return room.rootSpawn;
     } else if(bits[0] == 'I') {
-        var bid = Game.getObjectById[bits[1]];
-        //console.log('bid', bid, bits[1]);
+        var bid = Game.getObjectById(bits[1]);
+        console.log('bid', bid, bits[1]);
         return bid;
     } else if(bits[0] == 'Z') {
         return room.storage;
@@ -78,21 +95,25 @@ function getTarget(descriptor, memory) {
             });
             return links[0];
         }
-    } else if(bits[0] === 'E') {
+    } else if(bits[0] == 'E') {
         var index = 0;
         if(bits[1] === 'index') {
             index = ~~bits[3];
         }
         
-        return this.room.find(FIND_SOURCES)[index];
+        var found = room.find(FIND_SOURCES)[index];
+        //console.log('Locate E', room, found);
+        return found;
+    } else {
+        console.log("**** Confused lookign for ", bits[0], '('+descriptor+')');
     }
 };
 
 function findPosNextTo(idA, idB) {
+
     var a = this.getTarget(idA);
     var b = this.getTarget(idB);
-    
-    console.log(a, b);
+    console.log('findPosNextTo:', idA, idB, a, b);
     
     if(!a || !b) return [];
     var aPos = a.pos;

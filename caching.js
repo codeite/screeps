@@ -7,20 +7,18 @@ module.exports = {
 
 Room.prototype.findPathCached = function(startPos, endPos, options) {
 
-    //if(!(startPos instanceof RoomPosition)) return ERR_INVALID_ARGS;
-    //if(!(endPos instanceof RoomPosition)) return ERR_INVALID_ARGS;
-/*
-    var startPosCannon;
-    if(startPos && startPos.toCanonString) {
-        startPosCannon = startPos.toCanonString();
-    } else 
+    if(!(startPos instanceof RoomPosition)) return ERR_INVALID_ARGS;
+    if(!(endPos instanceof RoomPosition)) return ERR_INVALID_ARGS;
 
-    var endPosCannon;
-    if(endPos && endPos.toCanonString) {
-        endPosCannon = endPos.toCanonString();
-    } else return ERR_INVALID_ARGS;
-*/
+    var key = toCannonString(startPos, endPos, findPathOptionsToCannonString(options));
+    //console.log('key:', key);
+    if(Memory.cache.paths[key]) {
+        return Memory.cache.paths[key];
+    }
+
     var path = this.findPath(startPos, endPos, options);
+
+    Memory.cache.paths[key] = path;
 
     return path;
 }
@@ -28,11 +26,11 @@ Room.prototype.findPathCached = function(startPos, endPos, options) {
 function toCannonString() {
     var strings = [];
 
-    for(var i in this.args) {
-        var arg = this.args[i];
+    for(var i in arguments) {
+        var arg = arguments[i];
 
-        if(typeof arg === 'function') strings.push(arg());
-        else if (arg.toCanonString) strings.push(toCanonString());
+        if(typeof arg === 'string') strings.push(arg);
+        else if (arg.toCanonString) strings.push(arg.toCanonString());
         else return ERR_INVALID_ARGS;
     }
 

@@ -1,4 +1,5 @@
 var chassis = require('chassis');
+var infraConvayor = require('infra.convayor');
 
 module.exports = {
     applyStrategy: applyLevelFive,
@@ -88,17 +89,26 @@ function applyLevelFive(spawn, intel, army) {
         if(intel.importantPlaces.sourceAndStorage && intel.importantPlaces.sourceAndStorage.length) {
             //for(var i=0; i<intel.importantPlaces.sourceAndStorage.length; i++){
                 var pos = intel.importantPlaces.sourceAndStorage[0];
-                army.push({chassis: chassis.staticWorker(6, true), name: 'HeavyDrill'+(ids.heavyWorkerId++), role: 'drill', config:{pos: pos}});
+                army.push({chassis: chassis.staticWorker(6, true), name: 'HeavyDriller'+(ids.heavyDriller++), role: 'drill', config:{pos: pos}});
             //}
             army.push({chassis: chassis.lightTransport, name: 'lightTransport'+(ids.lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F", destination: "Z"} });
         } else {
             for(var i=0; i<intel.importantPlaces.drillSpots.length; i++) {
                 var drillName = 'HeavyDriller'+(ids.heavyDriller++);
-                army.push({chassis: chassis.staticWorker(5, false), name: drillName, role: 'drill', config:{pos: intel.importantPlaces.drillSpots[i].sites[0]  }});
-                army.push({chassis: chassis.transporter(3), name: 'lightTransport'+(ids.lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F:on:R:"+drillName, destination: "Z"} });
+                var site = intel.importantPlaces.drillSpots[i].sites[0];
+                army.push({chassis: chassis.staticWorker(6, true), name: drillName, role: 'drill', config:{pos: site }});
+                //army.push({chassis: chassis.transporter(3), name: 'lightTransport'+(ids.lightTransport++), role: 'tanker4', config: {industry: 'gen', source: "F:on:R:"+drillName, destination: "Z"} });
             
+
+                var source = spawn.room.getPositionAt(site.x, site.y);
+                var dest = spawn.room.getTarget('Z').pos;
+                //var stg = new Game.Strategy();
+                
+                var carmy = infraConvayor.buildConvayor(spawn, source, dest, drillName);
+                for(var j in carmy) army.push(carmy[j]);
             }
-               
+            
+
         }
         
     

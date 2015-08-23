@@ -8,7 +8,7 @@ function drill() {
     
     if(this.config.pos) {
         if(!(this.pos.x == this.config.pos.x && this.pos.y ==this.config.pos.y)){
-            console.log(this, 'Moving into pos! At:', this.pos.x , this.pos.y , 'Going to:', this.config.pos.x ,this.config.pos.y, 'Drill at:', this.config.pos.sourceId);
+            //console.log(this, 'Moving into pos! At:', this.pos.x , this.pos.y , 'Going to:', this.config.pos.x ,this.config.pos.y, 'Drill at:', this.config.pos.sourceId);
             this.moveTo(this.config.pos.x, this.config.pos.y);
             return;
         }
