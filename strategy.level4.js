@@ -12,13 +12,12 @@ function toRoad(p) {
 function upgradeToLevelFour(spawn, intel) {
     var roads = [];
     
-    //console.log('Upgrade');
-    //spawn.room.createConstructionSite(spawn.pos.x, spawn.pos.y+1, STRUCTURE_ROAD);
-    //spawn.room.createConstructionSite(spawn.pos.x, spawn.pos.y+2, STRUCTURE_ROAD);
-    //spawn.room.createConstructionSite(spawn.pos.x, spawn.pos.y+3, STRUCTURE_ROAD);
+    
     if(spawn.room.name == 'W9N8') {
         var n = 1;
         for(var dy=2; dy<=11; dy++) {
+            roads.push([spawn.pos.x-1, spawn.pos.y-dy]);
+            
             for(var dx=0; dx<=2; dx+=2) {
                 var y = spawn.pos.y-dy;
                 var xRoad = spawn.pos.x+((dy+1)%2)+dx;

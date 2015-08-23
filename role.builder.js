@@ -347,7 +347,7 @@ function buildStatic(intel) {
                 return s.energy || (s.store && s.store.energy);
             })
 
-            if(targets.length) {
+            if(withEnergy.length) {
                 targets[0].transferEnergy(this);
             }
         }
@@ -361,7 +361,6 @@ function buildStatic(intel) {
                 this.memory.targetId = target.id;
             }
         }
-        
 
         if(!target) {
             var targets = this.room.find(FIND_CONSTRUCTION_SITES);

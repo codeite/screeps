@@ -50,6 +50,7 @@ function tanker (intel) {
         if(source instanceof Energy) {
             res = creep.pickup(source);
             //console.log('energy:', source.energy);
+            /*
             if(source.energy < 10) {
                 var curTarget = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY, {
                     filter: function(object) {
@@ -58,6 +59,7 @@ function tanker (intel) {
                 });
                 if(curTarget) creep.memory.target = curTarget.id;
             }
+            */
         }
         
         if(creep.carry.energy === creep.carryCapacity) {

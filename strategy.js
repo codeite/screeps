@@ -2,7 +2,7 @@
 var chassis = require('chassis');
 var armyManager = require('armyManager');
 
-var applyInvasion = require('strategy.invasion');
+
 var stratergyMaintanance = require('strategy.maintanance');
 
 module.exports = function(spawn, intel) {
@@ -25,9 +25,6 @@ module.exports = function(spawn, intel) {
         require('strategy.level5').applyStrategy(spawn, intel, army, strategy);
     }
     
-    if(spawn.room.storage && spawn.room.storage.store.energy > 10000) {
-        applyInvasion.applyInvasion(spawn, intel, army);
-    }   
     strategy.army = army;
 
     armyManager.maintainArmy(spawn, army, intel);

@@ -25,7 +25,7 @@ function getTarget(descriptor, memory) {
     }
     
     //console.log('this', this);
-    var bits = descriptor.split(':', 3);
+    var bits = descriptor.betterSplit(':', 3);
     if(bits[0] == 'C') {
         return Game.creeps[room.name+'-'+bits[1]];
     } else if(bits[0] == 'R') {
@@ -46,13 +46,22 @@ function getTarget(descriptor, memory) {
     } else if(bits[0] == 'T') {
         return Game.structures[bits[1]];
     } else if(bits[0] == 'F') {
-        var curTarget = Game.getObjectById(memory.target);
-        
-        if(!curTarget) {
+        var curTarget = Game.getObjectById(memory.targetId);
+
+        if(!curTarget && bits[1] === 'on' && bits[2]) {
+            var local = this.getTarget(bits[2], memory);
+
+            if(local && local.pos) {
+                var found = local.pos.lookFor('energy');
+                if(found.length) {
+                    curTarget = found[0];
+                    memory.targetId = curTarget.id;
+                }
+            }
+        } else if(!curTarget) {
             curTarget = pos.findClosestByRange(FIND_DROPPED_ENERGY);
-            if(curTarget) memory.target = curTarget.id;
+            if(curTarget) memory.targetId = curTarget.id;
         }
-        
         return curTarget;
     } else if(bits[0] == 'L') {
         if(bits[1] === 'nearestTo') {

@@ -12,15 +12,18 @@ function resetGlobals() {
 
   GLOBAL.ERR_INVALID_ARGS = -10;
 
-  Memory.cache = {};
+  GLOBAL.Memory.cache = {};
+
+  //console.log('Set globals');
 }
 
-var caching = require('../caching');
+var caching;
 
 describe('caching', function() {
   
   beforeEach(function() {
     resetGlobals();
+    caching = require('../caching');
   });
 
   describe('RoomPosition.toCanonString()', function () {

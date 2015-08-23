@@ -1,3 +1,4 @@
+require('js');
 initMemory();
 //console.log('Tick:', Game.time);
 require('registry');
@@ -24,13 +25,16 @@ var collectIntel = require('intel.collect');
 //require('spawnList');
 
 var strategy = require('strategy');
-
+var invasion = require('strategy.invasion');
+  
 for(var spawnName in Game.spawns) {
     var spawn = Game.spawns[spawnName];
     var intel = collectIntel(spawn);
     spawn.room.intel = intel;
     strategy(spawn, spawn.room.intel);
 }
+
+//invasion.applyInvasion(Game.spawns.Spawn2, spawn.room.intel);
 
 //console.log("Used "+ Game.getUsedCpu()+" of "+Game.cpuLimit+" CPU already");
 

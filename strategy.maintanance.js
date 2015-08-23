@@ -6,7 +6,7 @@ module.exports = {
 
             if(Game.time % 300 === 0 ) {
               for(var i=2; i<=intel.controllerLevel; i++)
-                require('strategy.level'+i).applyInfrastructure(spawn);
+                require('strategy.level'+i).applyInfrastructure(spawn, intel);
             }
 
             var roads = [];
