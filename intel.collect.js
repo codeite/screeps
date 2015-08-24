@@ -13,7 +13,7 @@ module.exports = function collectIntel(spawn) {
         structures: 0
     };
 
-    intel.controllerLevel = room.controller.level;
+    intel.controllerLevel = room.controller ? room.controller.level : 0;
     intel.progressLevel = room.controller.level;
     intel.totalEnergy =  spawn.energy;
     intel.maxEnergy = spawn.energyCapacity;
