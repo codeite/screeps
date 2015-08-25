@@ -98,7 +98,7 @@ module.exports = function collectIntel(spawn) {
     
     if(!intel.importantPlaces) intel.importantPlaces = {};
     
-    if(!intel.importantPlaces.drillSpots) {
+    if(!intel.importantPlaces.drillSpots || intel.importantPlaces.drillSpots.length == 0) {
             intel.importantPlaces.drillSpots = findDrillSpots(spawn);
         }
 

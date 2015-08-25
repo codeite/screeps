@@ -25,3 +25,13 @@ String.prototype.betterSplit = function(deliminator, count) {
     
     return bits;
 }
+/*
+function ccs(a,b,c) {
+  console.log('Boo', a, b, c);
+  wibble;
+  this.createConstructionSiteOld(a,b,c);
+}
+
+Room.prototype.createConstructionSiteOld = Room.prototype.createConstructionSite;
+Room.prototype.createConstructionSite = ccs;
+*/

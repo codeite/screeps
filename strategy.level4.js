@@ -36,21 +36,10 @@ function upgradeToLevelFour(spawn, intel) {
                 var res = spawn.room.createFlag(xRoad, y,  name, COLOR_GREY);
                 //console.log(res
                 n++ 
-                */           }
+                */           
+            }
         }
-    } else {
-        roads.push([spawn.pos.x, spawn.pos.y+1]);
-        roads.push([spawn.pos.x, spawn.pos.y+2]);
-        roads.push([spawn.pos.x, spawn.pos.y+3]);
-        
-        for(var x=1; x<=5; x++) {
-            spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+2, STRUCTURE_EXTENSION);
-            //spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+3, STRUCTURE_ROAD);
-            roads.push([spawn.pos.x-x, spawn.pos.y+3]);
-            roads.push([spawn.pos.x-x, spawn.pos.y]);
-            spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+4, STRUCTURE_EXTENSION);
-        }
-    }
+     }
     
     if(spawn.room.storage) {
         var route = spawn.room.findPath(spawn.pos, spawn.room.storage.pos, {ignoreCreeps: true});
@@ -88,9 +77,9 @@ function upgradeToLevelFour(spawn, intel) {
 function applyLevelFour(spawn, intel, army) {
 
 
-    //if(intel.extensions.length + intel.extensionSites.length < 20) {
+    if(intel.extensions.length + intel.extensionSites.length < 20) {
         upgradeToLevelFour(spawn, intel);
-    //}
+    }
 
     var stats = {};
     var workerId=1;
@@ -111,7 +100,7 @@ function applyLevelFour(spawn, intel, army) {
     };
     
     if(!spawn.room.storage) {
-        buildStorage(ids);
+        buildStorage(spawn, intel, army, ids);
         
     } else {
         for(var i=0; i<intel.importantPlaces.drillSpots.length; i++) { 
@@ -155,9 +144,9 @@ function applyLevelFour(spawn, intel, army) {
 
 }
 
-function buildStorage(ids) {
+function buildStorage(spawn, intel, army, ids) {
     console.log('Building storage');
-    for(var i=0; i<2; i++) { 
+    for(var i=0; i<intel.importantPlaces.drillSpots.length; i++) { 
       army.push({chassis: chassis.staticWorker(5), name: 'HeavyWorker'+(ids.heavyWorkerId++), role: 'drill', config:{pos: intel.importantPlaces.drillSpots[i].sites[0]  }});
       army.push({chassis: chassis.transporter(5), name: 'HeavyTransport'+(ids.heavyTransportId++), role: 'tanker4', config: {industry: 'harvest', source: "F", destination: "Sr"} }); 
     }

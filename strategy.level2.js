@@ -28,11 +28,6 @@ function upgradeToLevelTwo(spawn) {
             //var res = spawn.room.createFlag(xRoad, y,  name, COLOR_GREY);
             //console.log(res);
         }
-    } else {
-        for(var dx=1; dx<=5; dx++) {
-            spawn.room.createConstructionSite(spawn.pos.x-dx, spawn.pos.y-1, STRUCTURE_EXTENSION);
-            spawn.room.createConstructionSite(spawn.pos.x-dx, spawn.pos.y+1, STRUCTURE_EXTENSION);
-        }
     }
 }
 

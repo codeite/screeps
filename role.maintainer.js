@@ -18,9 +18,13 @@ function maintainer(intel) {
     
     var extensions = intel.extensions;
     var loops =  extensions.length;
+    if(extensions.length <= 0) {
+        creep.say('No ext');
+        return;
+    }
    
    
-    while(extensions[dindex].energy == extensions[dindex].energyCapacity && loops > 0) {
+    while((!extensions[dindex]  || extensions[dindex].energy == extensions[dindex].energyCapacity) && loops > 0) {
         dindex = (dindex+1)%extensions.length;
         loops--;
     }

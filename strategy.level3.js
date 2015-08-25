@@ -13,18 +13,20 @@ function upgradeToLevelThree(spawn) {
     //console.log('Upgrade');
     var roads = [];
 
-    var spawnOrbital = spawn.pos.getAdjacentPositions().map(toRoad);
-    roads = roads.concat(spawnOrbital);
+    if(spawn.room.name == 'W9N8' || spawn.room.name == 'W9N9') {
+        var spawnOrbital = spawn.pos.getAdjacentPositions().map(toRoad);
+        roads = roads.concat(spawnOrbital);
 
 
 
-    //console.log(spawn.room.intel.importantPlaces.drillSpots)
-    for(var index in spawn.room.intel.importantPlaces.drillSpots) {
-        var drillSpot = spawn.room.intel.importantPlaces.drillSpots[index];
-        var sourcePos = spawn.room.getPositionAt(drillSpot.source.x, drillSpot.source.y);
+        //console.log(spawn.room.intel.importantPlaces.drillSpots)
+        for(var index in spawn.room.intel.importantPlaces.drillSpots) {
+            var drillSpot = spawn.room.intel.importantPlaces.drillSpots[index];
+            var sourcePos = spawn.room.getPositionAt(drillSpot.source.x, drillSpot.source.y);
 
-        route = spawn.room.findPath(spawn.pos, sourcePos, {ignoreCreeps: true}).map(toRoad);
-        roads = roads.concat(route);
+            route = spawn.room.findPath(spawn.pos, sourcePos, {ignoreCreeps: true}).map(toRoad);
+            roads = roads.concat(route);
+        }
     }
 
     if(spawn.room.name == 'W9N8') {
@@ -35,7 +37,7 @@ function upgradeToLevelThree(spawn) {
 
             roads.push([xRoad, y]);
             spawn.room.createConstructionSite(xExt, y, STRUCTURE_EXTENSION);
-            
+            console.log('Look at me ma!');
 
             //var name = 'W9N8-extension-'+(5+dy);
             //if(Game.flags[name])Game.flags[name].remove();
@@ -48,30 +50,26 @@ function upgradeToLevelThree(spawn) {
         }
 
 
-    } else {
-        for(var dx=1; dx<=5; dx++) {
-            roads.push([spawn.pos.x-dx, spawn.pos.y]);
-            spawn.room.createConstructionSite(spawn.pos.x-dx, spawn.pos.y-1, STRUCTURE_EXTENSION);
-            spawn.room.createConstructionSite(spawn.pos.x-dx, spawn.pos.y+1, STRUCTURE_EXTENSION);
+    } 
+
+    if(spawn.room.name == 'W9N8' || spawn.room.name == 'W9N9') {
+        route = spawn.room.findPathCached(spawn.pos, spawn.room.controller.pos, {ignoreCreeps: true});
+        //console.log('route.length', route.length);
+        
+        for(var i in route) {
+            roads.push([route[i].x, route[i].y]);
         }
+
+        var controllerOrbital = spawn.room.controller.pos.getAdjacentPositions().map(toRoad);
+        roads = roads.concat(controllerOrbital);
+
+        if(Game.flags[spawn.room.name+'-TransitPoint']) {
+            var transitPointOrbital = Game.flags[spawn.room.name+'-TransitPoint'].pos.getAdjacentPositions().map(toRoad);
+            roads = roads.concat(transitPointOrbital);
+        }
+
+        spawn.room.memory.roads3 = roads;
     }
-
-    route = spawn.room.findPathCached(spawn.pos, spawn.room.controller.pos, {ignoreCreeps: true});
-    //console.log('route.length', route.length);
-    
-    for(var i in route) {
-        roads.push([route[i].x, route[i].y]);
-    }
-
-    var controllerOrbital = spawn.room.controller.pos.getAdjacentPositions().map(toRoad);
-    roads = roads.concat(controllerOrbital);
-
-    if(Game.flags[spawn.room.name+'-TransitPoint']) {
-        var transitPointOrbital = Game.flags[spawn.room.name+'-TransitPoint'].pos.getAdjacentPositions().map(toRoad);
-        roads = roads.concat(transitPointOrbital);
-    }
-
-    spawn.room.memory.roads3 = roads;
 }
 
 function applyLevelThree(spawn, intel, army, stratergy) {
@@ -85,14 +83,14 @@ function applyLevelThree(spawn, intel, army, stratergy) {
     var workerId=1;
     var maintainerId=1;
     
-
-    army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
-        
+    if(intel.extensions.length > 0) {
+        army.push({chassis: chassis.transporter(3), name: 'Maintainer'+(maintainerId++), role: 'maintainer'});
+    }
         
     var heavyWorkerId = 1;
     var heavyTransportId = 1;
         
-    for(var i=0; i<2; i++) { 
+    for(var i=0; i<intel.importantPlaces.drillSpots.length; i++) {
       army.push({chassis: chassis.staticWorker(5), name: 'HeavyWorker'+(heavyWorkerId++), role: 'drill', config:{pos: intel.importantPlaces.drillSpots[i].sites[0]  }});
       army.push({chassis: chassis.transporter(5), name: 'HeavyTransport'+(heavyTransportId++), role: 'tanker4', config: {industry: 'harvest', source: "F", destination: "Sr"} }); 
     }

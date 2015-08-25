@@ -37,18 +37,8 @@ function upgradeToLevelFive(spawn, intel) {
                 var res = spawn.room.createFlag(xRoad, y,  name, COLOR_GREY);
                 //console.log(res
                 n++ 
-                */           }
-        }
-    } else {
-    
-        roads.push([spawn.pos.x, spawn.pos.y+4]);
-        roads.push([spawn.pos.x, spawn.pos.y+5]);
-        roads.push([spawn.pos.x, spawn.pos.y+6]);
-        
-        for(var x=1; x<=5; x++) {
-            spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+5, STRUCTURE_EXTENSION);
-            roads.push([spawn.pos.x-x, spawn.pos.y+6]);
-            spawn.room.createConstructionSite(spawn.pos.x-x, spawn.pos.y+7, STRUCTURE_EXTENSION);
+                */           
+            }
         }
     }
     
