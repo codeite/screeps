@@ -21,6 +21,12 @@ require('role.park');
 require('role.tanker');
 require('role.explorer');
 
+/*
+_.filter(Game.creeps, function(c) {
+    return c.name.indexOf('W9N9-Builder1') === 0;
+}).forEach(function (c){c.suicide();});
+*/
+
 var pumper = require('pumper');
 
 var collectIntel = require('intel.collect');

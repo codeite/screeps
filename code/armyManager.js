@@ -27,7 +27,8 @@ function createChassis(spawn, energyAvailable, chassis, name, role, config) {
     if(energyAvailable >= chassis.cost) {
         var creepName = Game.registry.generateName(name);
         var newCreep = spawn.createCreep(chassis.parts, creepName, {role: role, config: config});
-        if(newCreep instanceof Creep) {
+        //console.log('newCreep:', newCreep, newCreep instanceof Creep);
+        if(typeof newCreep !== 'number' ) {
             console.log('Created', name, '('+creepName+')', newCreep);
             //newCreep.memory.replacement = null;
             
@@ -41,7 +42,7 @@ function createChassis(spawn, energyAvailable, chassis, name, role, config) {
                 Game.registry.register(name, creepName);
             }
            
-            return {existing: 0, energyUsed: chassis.cost, energyNeeded: 0, creep: newCreep};
+            return {existing: 0, energyUsed: chassis.cost, energyNeeded: 0, creep: null};
         } 
     } 
     
