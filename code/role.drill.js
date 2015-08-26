@@ -1,3 +1,4 @@
+Creep.role.drill = 'drill';
 Creep.prototype.drill = drill;
 
 module.exports = function(creep) {

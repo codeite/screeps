@@ -1,7 +1,12 @@
+var roomStrategies = {
+  //"W9N9": require('strategy.room.W9N9'),
+  "sim": require('strategy.room.sim')
+};
 
 var chassis = require('chassis');
 var armyManager = require('armyManager');
 
+var harvestIndustry = require('industry.harvest');
 
 var stratergyMaintanance = require('strategy.maintanance');
 
@@ -11,18 +16,26 @@ module.exports = function(spawn, intel) {
 
     var strategy = spawn.room.memory.strategy;
     var stats = spawn.room.memory.strategy;
+
     if(intel.controllerLevel === 0) {
         return;
-    } else if(intel.controllerLevel === 1) {
-        require('strategy.level1').applyStrategy(spawn, intel, army, strategy);
-    } else if(intel.controllerLevel === 2) {
-        require('strategy.level2').applyStrategy(spawn, intel, army, strategy);
-    } else if(intel.controllerLevel === 3) {
-        require('strategy.level3').applyStrategy(spawn, intel, army, strategy);
-    } else if(intel.controllerLevel === 4) {
-        require('strategy.level4').applyStrategy(spawn, intel, army, strategy);
+
+    if(roomStrategies[spawn.room.name]) {
+        var harvestArmy = harvestIndustry.apply(spawn, intel, roomStrategies[spawn.room.name]);
+
+        army = army.concat(harvestArmy);
     } else {
-        require('strategy.level5').applyStrategy(spawn, intel, army, strategy);
+        if(intel.controllerLevel === 1) {
+            require('strategy.level1').applyStrategy(spawn, intel, army, strategy);
+        } else if(intel.controllerLevel === 2) {
+            require('strategy.level2').applyStrategy(spawn, intel, army, strategy);
+        } else if(intel.controllerLevel === 3) {
+            require('strategy.level3').applyStrategy(spawn, intel, army, strategy);
+        } else if(intel.controllerLevel === 4) {
+            require('strategy.level4').applyStrategy(spawn, intel, army, strategy);
+        } else {
+            require('strategy.level5').applyStrategy(spawn, intel, army, strategy);
+        }
     }
     
     strategy.army = army;

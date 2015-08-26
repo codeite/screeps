@@ -1,5 +1,6 @@
 module.exports = harvester;
 
+Creep.role.harvester = 'harvester';
 Creep.prototype.harvester = harvester;
 
 function harvester(intel) {

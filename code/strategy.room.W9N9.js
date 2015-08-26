@@ -4,7 +4,8 @@ var buildStyles = require('strategy.buildStyles');
 
 module.exports = {
     setupInfrastructure: setupInfrastructure,
-    maintainInfrastructure: maintainInfrastructure
+    maintainInfrastructure: maintainInfrastructure,
+    plan: plan
 };
 
 function setupInfrastructure(spawn) {
@@ -22,4 +23,11 @@ function setupInfrastructure(spawn) {
 
 function maintainInfrastructure(spawn) {
     
+}
+
+function plan(spawn) {
+    return {
+        storageStratergy: 'nearSource:14:13',
+        storageLocation: {x: 15, y: 15}
+    }
 }

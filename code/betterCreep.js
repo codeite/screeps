@@ -13,6 +13,14 @@ Object.defineProperty(Creep.prototype, 'role', {
     configurable: true
 });
 
+Object.defineProperty(Creep.prototype, 'industry', {
+    get: function() { return this.memory.industry || ''; },
+    set: function(val) {  this.memory.industry = val; },
+    enumerable: true,
+    configurable: true
+});
+
+Creep.role = {};
 Creep.prototype.roleOverride = function (role, ttl) {
     this.memory.roleOverride = {role: role, ttl: ttl};
 };
