@@ -6,7 +6,10 @@ require('betterCreep');
 require('caching');
 require('locators');
 
+require('role.simple');
+
 require('role.conveyor');
+require('role.chain');
 require('role.flagPlanter');
 require('role.melee');
 require('role.transitPoint');
@@ -25,7 +28,7 @@ var collectIntel = require('intel.collect');
 //require('spawnList');
 var strategy = require('strategy');
 var invasion = require('strategy.invasion');
-  
+
 for(var spawnName in Game.spawns) {
     var spawn = Game.spawns[spawnName];
     var intel = collectIntel(spawn);
@@ -36,6 +39,7 @@ for(var spawnName in Game.spawns) {
 //invasion.applyInvasion(Game.spawns.Spawn2, spawn.room.intel);
 
 //console.log("Used "+ Game.getUsedCpu()+" of "+Game.cpuLimit+" CPU already");
+
 
 for(var name in Game.creeps) {
     //console.log('name', name);
@@ -49,9 +53,10 @@ for(var name in Game.creeps) {
     }
 }
 
+
 cleanMemory();
 
-function doCreep(creep) {
+function doCreep(creep, doCreepDelayed) {
     
     if(creep.memory.roleOverride) {
         if(creep.memory.roleOverride.ttl <= 0){
@@ -64,8 +69,9 @@ function doCreep(creep) {
     
     //console.log('Role: ', creep.role, typeof(creep[creep.role]))
     //console.log('Role: ', creep.conv)
-    if(typeof(creep[creep.role]) === 'function') {
+    if(typeof(creep[creep.role]) === 'function') {        
         return creep[creep.role](creep.room.intel);
+        
     }
     
 

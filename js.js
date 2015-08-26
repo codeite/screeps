@@ -24,7 +24,13 @@ String.prototype.betterSplit = function(deliminator, count) {
     } while(count >= 1 && pos !== -1);
     
     return bits;
-}
+};
+
+Array.append = function (target, extraItems) {
+  extraItems.forEach(function(item){
+    target.push(item);
+  });
+};
 /*
 function ccs(a,b,c) {
   console.log('Boo', a, b, c);

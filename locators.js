@@ -32,7 +32,7 @@ function getTarget(descriptor, memory) {
     //console.log('this', this);
     var bits = descriptor.betterSplit(':', 3);
     if(bits[0] == 'C') {
-        return Game.creeps[room.name+'-'+bits[1]];
+        return Game.creeps[room.name+'-'+bits[1]] || Game.creeps[bits[1]];;
     } else if(bits[0] == 'R') {
         var creep = Game.registry.getCreep(room.name+'-'+bits[1]);
         return creep;
@@ -41,17 +41,25 @@ function getTarget(descriptor, memory) {
         var found = room.lookForAt('creep', rp );
         console.log(room, 'Loooking for creep at:', bits[1], bits[2], 'found:', JSON.stringify(found));
         return found.length?found[0]:null;
-    } else if(bits[0] == 'FC') {
+    } else if(bits[0] == 'FC') { // Free energy or creep
         var rp = room.getPositionAt(bits[1], bits[2]);
         var foundE = room.lookForAt('energy', rp );
         if(foundE.length) return foundE[0];
         var foundC = room.lookForAt('creep', rp );
         //console.log(room, 'Loooking for creep at:', bits[1], bits[2], 'found:', JSON.stringify(foundC));
         return foundC.length?foundC[0]:null;
+    } else if(bits[0] == 'FCP') { // Free energy, creep or pos
+        var rp = room.getPositionAt(bits[1], bits[2]);
+        var foundE = room.lookForAt('energy', rp );
+        if(foundE.length) return foundE[0];
+        var foundC = room.lookForAt('creep', rp );
+        //console.log(room, 'Loooking for creep at:', bits[1], bits[2], 'found:', JSON.stringify(foundC));
+        return foundC.length?foundC[0]:rp;
     } else if(bits[0] == 'Ct') {
        return room.controller;
     } else if(bits[0] == 'S') {
-        return Game.spawns[bits[1]];
+        if(bits[1]) return Game.spawns[bits[1]];
+        return room.rootSpawn;
     } else if(bits[0] == 'Sr') {
         return room.rootSpawn;
     } else if(bits[0] == 'I') {
