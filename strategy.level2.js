@@ -1,4 +1,5 @@
 var chassis = require('chassis');
+var infraChain = require('infra.chain');
 
 module.exports = {
     applyStrategy: applyLevelTwo,
@@ -40,6 +41,7 @@ function applyLevelTwo(spawn, intel, army, stratergy) {
     var stats = {};
     var workerId=1;
     var maintainerId=1;
+
     
     if(intel.extensions.length < 5) {
 
