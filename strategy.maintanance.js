@@ -10,7 +10,7 @@ module.exports = {
         //console.log();
 
         if(roomStrategies[spawn.room.name]) {
-          if(Game.time % 300 === 0) roomStrategies[spawn.room.name].setupInfrastructure(spawn);
+            if(Game.time % 300 === 0 || !spawn.room.memory.permanentConstructions) roomStrategies[spawn.room.name].setupInfrastructure(spawn);
           //if(Game.time % 3 === 0) 
             maintainRoads(spawn);
           //console.log(spawn.room.name, 'using room stratergy');
