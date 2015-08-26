@@ -23,7 +23,7 @@ describe('caching', function() {
   
   beforeEach(function() {
     resetGlobals();
-    caching = require('../caching');
+    caching = require('../code/caching');
   });
 
   describe('RoomPosition.toCanonString()', function () {

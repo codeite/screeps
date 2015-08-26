@@ -1,7 +1,7 @@
 var should = require('chai').should()
 
 
-var caching = require('../js');
+var caching = require('../code/js');
 
 describe('js', function() {
   
